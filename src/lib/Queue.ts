@@ -48,6 +48,16 @@ export class Queue {
      */
     volume: number = 100;
     /**
+     * music is paused 
+     * @type {boolean}
+     */
+    paused: boolean = false
+    /**
+     * loop mode 
+     * @type {boolean}
+     */
+    loop: boolean = false
+    /**
      * 
      * @param {discord.Message} message 
      * @param {Track} track 
@@ -59,29 +69,5 @@ export class Queue {
     get queue() { 
         return this;
     }
-    /**
-     * clear the queue
-     */
-    @enumarable(false)
-    clear() { 
-        this.tracks.splice(0, this.tracks.length );
-    }
-    /**
-     * @param {number} postion index of the song to removed  
-     */
-    @enumarable(false)
-    remove(postion: number) { 
-        this.tracks.splice(postion, 1);
-    }
-    /**
-     * 
-     * @param {number} volume number to which volume to be changed 
-     * @returns previous volume
-     */
-    @enumarable(false)
-    setVolume(volume: number) { 
-        const prevVolume = this.volume;  
-        this.volume = volume;
-        return prevVolume
-    }
+   
 }

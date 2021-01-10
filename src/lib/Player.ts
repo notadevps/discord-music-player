@@ -43,6 +43,7 @@ export class Player extends EventEmitter {
         this.playerClient = client;
         this.playerQueue = new Map();
     }
+
     /**
      * @param {discord.Message} message discord message event 
      * @param {string} track  a url
@@ -66,23 +67,33 @@ export class Player extends EventEmitter {
             this.emit('trackAdded', q, message);
         }
     }
+
     /**
      * @param {string} guildId guild id 
      * @return queue for provided guild id 
+     * @example
+     * ```
+     * const queue = player.getQueue('guildid'); 
+     * ```
      */
-    getQueue(guildId: string) { 
-        if (!this.msg) { 
-            return this.emit('error' , 'no player found');
-        }
-        let q = this.playerQueue.get(guildId);
+    getQueue(message: discord.Message) { 
+        let q = this.playerQueue.get(message.guild!.id);
         if (!q) { 
-            return this.emit('error', 'No Queue Found In This Guild', this.msg); 
+            return this.emit('error', 'no player playing', this.msg); 
         }
         return q;
     }
+
     /**
      * @param {discord.Message} msg messge event 
      * @param  {string} argument string
+     * @example 
+     * ```
+     * client.on('mesage', message => {
+     * let argumnet = message.content.slice('play'.length);
+     * player.play(message, argument)
+     * })
+     * ```
      */
     async play(msg: discord.Message, argument: string) {
         this.msg = msg;
@@ -110,6 +121,7 @@ export class Player extends EventEmitter {
         const track = new Track(obj).track;
         this._createQueue(msg, track);
     }
+
     /**
      * @param {Queue} queue plays a track from queue 
      */
@@ -132,32 +144,124 @@ export class Player extends EventEmitter {
             return;
         }
         if (queue.tracks[0].url){
-        let stream = ytdl(queue.tracks[0].url, {
-            filter: 'audioonly', 
-            opusEncoded: true,
-        }); 
-        if (queue.stream) { 
-            queue.stream.destroy();
-        } 
-        queue.stream = stream;
-        queue.voiceConnection.play(queue.stream , {
-            type: 'opus'
-        }).on('finish' , () => { 
-            queue.tracks.splice(0, 1);
-            this.emit('trackEnded', queue, this.msg);
-            return this._playTrack(queue);
-        });
+            let stream = ytdl(queue.tracks[0].url, {
+                filter: 'audioonly', 
+                opusEncoded: true,
+            }); 
+            if (queue.stream) { 
+                queue.stream.destroy();
+            } 
+            queue.stream = stream;
+            queue.voiceConnection.play(queue.stream , {
+                type: 'opus'
+            }).on('finish' , () => { 
+                queue.tracks.splice(0, 1);
+                this.emit('trackEnded', queue, this.msg);
+                return this._playTrack(queue);
+            });
+        }
     }
-}
-/**
- * checks if music is playing
- * @return  true if music is playing else false
- */
-isPlaying() { 
-    if (!this.msg) { 
-        return false
+
+    /**
+     * @param {discord.Message} message
+     * clear the queue
+     */
+    clear(message: discord.Message) { 
+        const q = this.playerQueue.get(message.guild!.id);
+        if (!q) return this.emit('error', 'no player found') 
+        q.tracks.splice(0, q.tracks.length );
     }
-    return true 
+
+    /**
+     * @param {discord.Message} message
+     * @param {number} postion index of the song to removed  
+     */
+    remove(message: discord.Message, postion: number) { 
+        const q = this.playerQueue.get(message.guild!.id);
+        if (!q) return this.emit('error', 'no player found')
+        q.tracks.splice(postion, 1);
+    }
+
+    /**
+     * @param {discord.Message} message
+     * @param {number} volume number to which volume to be changed 
+     * @returns previous volume
+     */
+    setVolume(message: discord.Message, volume: number) {
+        const q = this.playerQueue.get(message.guild!.id);
+        if (!q) return this.emit('error', 'no player found')
+        const prevVolume = q.volume;  
+        q.voiceConnection?.dispatcher.setVolumeLogarithmic(q.volume / 200);
+        q.volume = volume;
+        return prevVolume;
+    }
+
+    /**
+     * 
+     * @param {discord.Message} message 
+     */
+    pause(message: discord.Message) { 
+        const q = this.playerQueue.get(message.guild!.id);
+        if (!q) return this.emit('error', 'no player found')
+        q.voiceConnection?.dispatcher.pause(); 
+        q.paused = true;
+    }
+
+    /**
+     * 
+     * @param {discord.Message} message 
+     */
+    resume(message: discord.Message) { 
+        const q = this.playerQueue.get(message.guild!.id);
+        if (!q) return this.emit('error', 'no player found')
+        q.voiceConnection?.dispatcher.resume(); 
+        q.paused = false;
+    }
+
+    /**
+     * 
+     * @param {discord.Message} message 
+     */
+    stop(message: discord.Message) { 
+        const q = this.playerQueue.get(message.guild!.id);
+        if (!q) return this.emit('error', 'no player found');
+        q.voiceConnection?.dispatcher.end();
+        q.voiceConnection?.channel.leave();
+        this.playerQueue.delete(message.guild!.id);
+    }
+
+    /**
+     * @returns current playing music
+     */
+    nowPlaying(message: discord.Message) { 
+        const q = this.playerQueue.get(message.guild!.id);
+        if (!q) return this.emit('error', 'no player found')
+        return q.tracks[0];
+    }
+    /**
+     * 
+     * @param {discord.Message} message 
+     */
+    skip(message: discord.Message) { 
+
+    }
+    /**
+     * 
+     * @param {discord.Message} message 
+     * @param {discord.Message} enabled 
+     */
+    setLoopMode(message: discord.Message, enabled: boolean ) { 
+
+    }
+    /**
+     * 
+     * @param {discord.Message} message 
+     */
+    shuffle(message: discord.Message) { 
+        
+    }
 }
 
-}
+
+
+//EVENTS
