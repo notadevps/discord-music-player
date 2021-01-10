@@ -41,4 +41,4 @@ client.on('message', msg => {
         return msg.channel.send(c);
     }
 });
-client.login('NzU3ODkxMjgyNDQ5MjAzMjEw.X2m_Qg.8WcDZzvYH2Rv8xaEB0dp0eAUqwA');
+client.login('TOKEN');
