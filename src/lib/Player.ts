@@ -3,7 +3,7 @@ import ytdl from 'discord-ytdl-core';
 import discord from 'discord.js';
 import { Queue }  from './Queue';
 import { EventEmitter } from 'events';
-import { Track } from './tracks';
+import { Track } from './Tracks';
 import ytr  from 'yt-search';
 /**
  * util type
