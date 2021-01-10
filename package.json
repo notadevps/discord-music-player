@@ -1,7 +1,7 @@
 {
-
   "dependencies": {
     "@discordjs/opus": "^0.3.3",
+    "@types/ws": "^7.4.0",
     "@types/yt-search": "^2.3.0",
     "clean-jsdoc-theme": "^3.0.6",
     "discord-ytdl-core": "^5.0.0",

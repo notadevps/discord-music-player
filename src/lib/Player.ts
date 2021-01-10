@@ -48,7 +48,7 @@ export class Player extends EventEmitter {
      * @param {discord.Message} message discord message event 
      * @param {string} track  a url
      */
-    protected _createQueue(message: discord.Message, track: Track) { 
+    protected _createQueue(message: discord.Message, track: Track): void |  boolean{ 
         if (!message.guild)  return this.emit('error', 'no guild found');
         if (!message.member?.voice.channel) { 
             return this.emit('error', 'should be in vc');
@@ -76,7 +76,7 @@ export class Player extends EventEmitter {
      * const queue = player.getQueue('guildid'); 
      * ```
      */
-    getQueue(message: discord.Message) { 
+    getQueue(message: discord.Message): Queue | boolean { 
         let q = this.playerQueue.get(message.guild!.id);
         if (!q) { 
             return this.emit('error', 'no player playing', this.msg); 
@@ -95,7 +95,7 @@ export class Player extends EventEmitter {
      * })
      * ```
      */
-    async play(msg: discord.Message, argument: string) {
+    async play(msg: discord.Message, argument: string): Promise<void | boolean> {
         this.msg = msg;
         let arg; 
         if (argument.includes('https://') && argument.includes('youtube.com')) { 
@@ -125,7 +125,7 @@ export class Player extends EventEmitter {
     /**
      * @param {Queue} queue plays a track from queue 
      */
-    protected _playTrack(queue: Queue){ 
+    protected _playTrack(queue: Queue): void | boolean{ 
         if (!this.msg) { 
             return this.emit('error', 'no player found');
         }
@@ -166,7 +166,7 @@ export class Player extends EventEmitter {
      * @param {discord.Message} message
      * clear the queue
      */
-    clear(message: discord.Message) { 
+    clear(message: discord.Message): void | boolean { 
         const q = this.playerQueue.get(message.guild!.id);
         if (!q) return this.emit('error', 'no player found') 
         q.tracks.splice(0, q.tracks.length );
@@ -176,7 +176,7 @@ export class Player extends EventEmitter {
      * @param {discord.Message} message
      * @param {number} postion index of the song to removed  
      */
-    remove(message: discord.Message, postion: number) { 
+    remove(message: discord.Message, postion: number): void | boolean { 
         const q = this.playerQueue.get(message.guild!.id);
         if (!q) return this.emit('error', 'no player found')
         q.tracks.splice(postion, 1);
@@ -187,7 +187,7 @@ export class Player extends EventEmitter {
      * @param {number} volume number to which volume to be changed 
      * @returns previous volume
      */
-    setVolume(message: discord.Message, volume: number) {
+    setVolume(message: discord.Message, volume: number): number | boolean {
         const q = this.playerQueue.get(message.guild!.id);
         if (!q) return this.emit('error', 'no player found')
         const prevVolume = q.volume;  
@@ -200,40 +200,43 @@ export class Player extends EventEmitter {
      * 
      * @param {discord.Message} message 
      */
-    pause(message: discord.Message) { 
+    pause(message: discord.Message):  boolean{ 
         const q = this.playerQueue.get(message.guild!.id);
         if (!q) return this.emit('error', 'no player found')
         q.voiceConnection?.dispatcher.pause(); 
         q.paused = true;
+        return q.paused
     }
 
     /**
      * 
      * @param {discord.Message} message 
      */
-    resume(message: discord.Message) { 
+    resume(message: discord.Message): boolean{ 
         const q = this.playerQueue.get(message.guild!.id);
         if (!q) return this.emit('error', 'no player found')
         q.voiceConnection?.dispatcher.resume(); 
         q.paused = false;
+        return q.paused
     }
 
     /**
      * 
      * @param {discord.Message} message 
      */
-    stop(message: discord.Message) { 
+    stop(message: discord.Message): boolean { 
         const q = this.playerQueue.get(message.guild!.id);
         if (!q) return this.emit('error', 'no player found');
         q.voiceConnection?.dispatcher.end();
         q.voiceConnection?.channel.leave();
         this.playerQueue.delete(message.guild!.id);
+        return true
     }
 
     /**
      * @returns current playing music
      */
-    nowPlaying(message: discord.Message) { 
+    nowPlaying(message: discord.Message): Track | boolean { 
         const q = this.playerQueue.get(message.guild!.id);
         if (!q) return this.emit('error', 'no player found')
         return q.tracks[0];
