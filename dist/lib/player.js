@@ -69,20 +69,28 @@ class Player extends events_1.EventEmitter {
     /**
      * @param {string} guildId guild id
      * @return queue for provided guild id
+     * @example
+     * ```
+     * const queue = player.getQueue('guildid');
+     * ```
      */
-    getQueue(guildId) {
-        if (!this.msg) {
-            return this.emit('error', 'no player found');
-        }
-        let q = this.playerQueue.get(guildId);
+    getQueue(message) {
+        let q = this.playerQueue.get(message.guild.id);
         if (!q) {
-            return this.emit('error', 'No Queue Found In This Guild', this.msg);
+            return this.emit('error', 'no player playing', this.msg);
         }
         return q;
     }
     /**
      * @param {discord.Message} msg messge event
      * @param  {string} argument string
+     * @example
+     * ```
+     * client.on('mesage', message => {
+     * let argumnet = message.content.slice('play'.length);
+     * player.play(message, argument)
+     * })
+     * ```
      */
     play(msg, argument) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -154,14 +162,105 @@ class Player extends events_1.EventEmitter {
         }
     }
     /**
-     * checks if music is playing
-     * @return  true if music is playing else false
+     * @param {discord.Message} message
+     * clear the queue
      */
-    isPlaying() {
-        if (!this.msg) {
-            return false;
-        }
-        return true;
+    clear(message) {
+        const q = this.playerQueue.get(message.guild.id);
+        if (!q)
+            return this.emit('error', 'no player found');
+        q.tracks.splice(0, q.tracks.length);
+    }
+    /**
+     * @param {discord.Message} message
+     * @param {number} postion index of the song to removed
+     */
+    remove(message, postion) {
+        const q = this.playerQueue.get(message.guild.id);
+        if (!q)
+            return this.emit('error', 'no player found');
+        q.tracks.splice(postion, 1);
+    }
+    /**
+     * @param {discord.Message} message
+     * @param {number} volume number to which volume to be changed
+     * @returns previous volume
+     */
+    setVolume(message, volume) {
+        var _a;
+        const q = this.playerQueue.get(message.guild.id);
+        if (!q)
+            return this.emit('error', 'no player found');
+        const prevVolume = q.volume;
+        (_a = q.voiceConnection) === null || _a === void 0 ? void 0 : _a.dispatcher.setVolumeLogarithmic(q.volume / 200);
+        q.volume = volume;
+        return prevVolume;
+    }
+    /**
+     *
+     * @param {discord.Message} message
+     */
+    pause(message) {
+        var _a;
+        const q = this.playerQueue.get(message.guild.id);
+        if (!q)
+            return this.emit('error', 'no player found');
+        (_a = q.voiceConnection) === null || _a === void 0 ? void 0 : _a.dispatcher.pause();
+        q.paused = true;
+    }
+    /**
+     *
+     * @param {discord.Message} message
+     */
+    resume(message) {
+        var _a;
+        const q = this.playerQueue.get(message.guild.id);
+        if (!q)
+            return this.emit('error', 'no player found');
+        (_a = q.voiceConnection) === null || _a === void 0 ? void 0 : _a.dispatcher.resume();
+        q.paused = false;
+    }
+    /**
+     *
+     * @param {discord.Message} message
+     */
+    stop(message) {
+        var _a, _b;
+        const q = this.playerQueue.get(message.guild.id);
+        if (!q)
+            return this.emit('error', 'no player found');
+        (_a = q.voiceConnection) === null || _a === void 0 ? void 0 : _a.dispatcher.end();
+        (_b = q.voiceConnection) === null || _b === void 0 ? void 0 : _b.channel.leave();
+        this.playerQueue.delete(message.guild.id);
+    }
+    /**
+     * @returns current playing music
+     */
+    nowPlaying(message) {
+        const q = this.playerQueue.get(message.guild.id);
+        if (!q)
+            return this.emit('error', 'no player found');
+        return q.tracks[0];
+    }
+    /**
+     *
+     * @param {discord.Message} message
+     */
+    skip(message) {
+    }
+    /**
+     *
+     * @param {discord.Message} message
+     * @param {discord.Message} enabled
+     */
+    setLoopMode(message, enabled) {
+    }
+    /**
+     *
+     * @param {discord.Message} message
+     */
+    shuffle(message) {
     }
 }
 exports.Player = Player;
+//EVENTS
