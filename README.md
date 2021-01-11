@@ -1,6 +1,6 @@
 
 Discord Music Player
-a music player based on discord.js [link](https://discord.js.org/#/)
+a music player based on discord.js [link](https://discord.js.org/#/)\
 with typescript support 
 
 # Quickstart
@@ -8,7 +8,10 @@ with typescript support
 make a file in an IDE of your choice
 you can start with
 ```
+const discord = require('discord.js');
+const client = new discord.Client();
 const { Player } = require ('discord-music-player');
+const player = new Player(client);
 ```
 you can listen on some events on Player 
 
