@@ -154,6 +154,7 @@ export class Player extends EventEmitter {
             let stream = ytdl(queue.tracks[0].url, {
                 filter: 'audioonly', 
                 opusEncoded: true,
+                highWaterMark: 1 << 25
             }); 
             if (queue.stream) { 
                 queue.stream.destroy();
@@ -256,6 +257,7 @@ export class Player extends EventEmitter {
         if (!q) return this.emit('error', 'no player found')
         return q.tracks[0];
     }
+    
     /**
      * 
      * @param {discord.Message} message 
@@ -265,6 +267,7 @@ export class Player extends EventEmitter {
         if(!q) return this.emit('error', 'no player found'); 
         q.voiceConnection?.dispatcher.end();
     }
+
     /**
      * loop mode  
      * @param {discord.Message} message 
@@ -281,6 +284,14 @@ export class Player extends EventEmitter {
             q.loop = false;
             return false;
         }
+    }
+    
+    /**
+     * 
+     * @param {Object} filter 
+     */
+    setFilter(filter: Object) { 
+
     }
 
 }
