@@ -22,7 +22,7 @@ client.on('message', msg => {
     if (msg.content.includes('+play')){
         player.play(msg, arg); 
     } else if (msg.content.includes('+q')) { 
-        let c = player.getQueue(msg.guild.id);
+        let c = player.getQueue(msg);
         let x = ' '
         if (!c.tracks) { 
             return msg.channel.send('adawdadw');
@@ -34,11 +34,20 @@ client.on('message', msg => {
         }
         return msg.channel.send(x);
     } else if (msg.content.includes('+clear')) { 
-        let  c = player.getQueue(msg.guild.id);
+        let  c = player.getQueue(msg);
         c.clearQueue();
     } else if (msg.content.includes('+isPlaying')){ 
         let c = player.isPlaying();
         return msg.channel.send(c);
+    } else if (msg.content.includes('+skip')) { 
+        player.skip(msg); 
+
+    } else if (msg.content.includes('+loop')) { 
+        let c = player.setLoopMode(msg, true);
+        return msg.channel.send(c);
+    } else if (msg.content.includes('+stop')) { 
+        let c = player.stop(msg); 
+        return msg.channel.send('done');
     }
 });
 client.login('TOKEN');

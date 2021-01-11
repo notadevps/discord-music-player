@@ -57,6 +57,7 @@ export class Queue {
      * @type {boolean}
      */
     loop: boolean = false
+    
     /**
      * 
      * @param {discord.Message} message 

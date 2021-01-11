@@ -1,5 +1,5 @@
 import discord from 'discord.js';
-import { Track } from './tracks';
+import { Track } from './Tracks';
 /**
  * util type
  */

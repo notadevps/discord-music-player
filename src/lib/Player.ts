@@ -8,6 +8,11 @@ import ytr  from 'yt-search';
 /**
  * util type
  */
+
+ /**
+  * TODO
+  * TYPE CHECKING AND PARAMS CHECKING
+  */
 export type Null<T> = T | null
 
 export class Player extends EventEmitter { 
@@ -75,6 +80,7 @@ export class Player extends EventEmitter {
      * ```
      * const queue = player.getQueue('guildid'); 
      * ```
+     * @returns queue
      */
     getQueue(message: discord.Message): Queue | boolean { 
         let q = this.playerQueue.get(message.guild!.id);
@@ -123,6 +129,7 @@ export class Player extends EventEmitter {
     }
 
     /**
+     * play track
      * @param {Queue} queue plays a track from queue 
      */
     protected _playTrack(queue: Queue): void | boolean{ 
@@ -155,7 +162,9 @@ export class Player extends EventEmitter {
             queue.voiceConnection.play(queue.stream , {
                 type: 'opus'
             }).on('finish' , () => { 
-                queue.tracks.splice(0, 1);
+                if (queue.loop === false) { 
+                    queue.tracks.splice(0, 1);
+                }
                 this.emit('trackEnded', queue, this.msg);
                 return this._playTrack(queue);
             });
@@ -163,8 +172,8 @@ export class Player extends EventEmitter {
     }
 
     /**
-     * @param {discord.Message} message
      * clear the queue
+     * @param {discord.Message} message
      */
     clear(message: discord.Message): void | boolean { 
         const q = this.playerQueue.get(message.guild!.id);
@@ -173,6 +182,7 @@ export class Player extends EventEmitter {
     }
 
     /**
+     * remove a track from the queue
      * @param {discord.Message} message
      * @param {number} postion index of the song to removed  
      */
@@ -183,6 +193,7 @@ export class Player extends EventEmitter {
     }
 
     /**
+     * sets volume 0-100
      * @param {discord.Message} message
      * @param {number} volume number to which volume to be changed 
      * @returns previous volume
@@ -197,10 +208,10 @@ export class Player extends EventEmitter {
     }
 
     /**
-     * 
+     * pause the track
      * @param {discord.Message} message 
      */
-    pause(message: discord.Message):  boolean{ 
+    pause(message: discord.Message):  boolean{
         const q = this.playerQueue.get(message.guild!.id);
         if (!q) return this.emit('error', 'no player found')
         q.voiceConnection?.dispatcher.pause(); 
@@ -209,8 +220,9 @@ export class Player extends EventEmitter {
     }
 
     /**
-     * 
+     * resume the player
      * @param {discord.Message} message 
+     * @return false 
      */
     resume(message: discord.Message): boolean{ 
         const q = this.playerQueue.get(message.guild!.id);
@@ -221,8 +233,9 @@ export class Player extends EventEmitter {
     }
 
     /**
-     * 
+     * stops the track and bot leaves voice channel
      * @param {discord.Message} message 
+     * @returns true 
      */
     stop(message: discord.Message): boolean { 
         const q = this.playerQueue.get(message.guild!.id);
@@ -234,7 +247,9 @@ export class Player extends EventEmitter {
     }
 
     /**
+     * now playing 
      * @returns current playing music
+     * @return track
      */
     nowPlaying(message: discord.Message): Track | boolean { 
         const q = this.playerQueue.get(message.guild!.id);
@@ -245,24 +260,29 @@ export class Player extends EventEmitter {
      * 
      * @param {discord.Message} message 
      */
-    skip(message: discord.Message) { 
-
+    skip(message: discord.Message) {
+        const q = this.playerQueue.get(message.guild!.id); 
+        if(!q) return this.emit('error', 'no player found'); 
+        q.voiceConnection?.dispatcher.end();
     }
     /**
-     * 
+     * loop mode  
      * @param {discord.Message} message 
      * @param {discord.Message} enabled 
+     * @returns true if loop is enabled else false 
      */
-    setLoopMode(message: discord.Message, enabled: boolean ) { 
+    setLoopMode(message: discord.Message, enabled: boolean ): boolean {
+        const q = this.playerQueue.get(message.guild!.id); 
+        if(!q) return this.emit('error', 'no player found'); 
+        if (q.loop == false ) { 
+            q.loop = true
+            return true;  
+        } else {
+            q.loop = false;
+            return false;
+        }
+    }
 
-    }
-    /**
-     * 
-     * @param {discord.Message} message 
-     */
-    shuffle(message: discord.Message) { 
-        
-    }
 }
 
 

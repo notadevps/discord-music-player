@@ -16,7 +16,7 @@ exports.Player = void 0;
 const discord_ytdl_core_1 = __importDefault(require("discord-ytdl-core"));
 const Queue_1 = require("./Queue");
 const events_1 = require("events");
-const tracks_1 = require("./tracks");
+const Tracks_1 = require("./Tracks");
 const yt_search_1 = __importDefault(require("yt-search"));
 class Player extends events_1.EventEmitter {
     /**
@@ -73,6 +73,7 @@ class Player extends events_1.EventEmitter {
      * ```
      * const queue = player.getQueue('guildid');
      * ```
+     * @returns queue
      */
     getQueue(message) {
         let q = this.playerQueue.get(message.guild.id);
@@ -117,11 +118,12 @@ class Player extends events_1.EventEmitter {
                 author: c.videoDetails.author.name,
                 url: c.videoDetails.video_url
             };
-            const track = new tracks_1.Track(obj).track;
+            const track = new Tracks_1.Track(obj).track;
             this._createQueue(msg, track);
         });
     }
     /**
+     * play track
      * @param {Queue} queue plays a track from queue
      */
     _playTrack(queue) {
@@ -155,15 +157,17 @@ class Player extends events_1.EventEmitter {
             queue.voiceConnection.play(queue.stream, {
                 type: 'opus'
             }).on('finish', () => {
-                queue.tracks.splice(0, 1);
+                if (queue.loop === false) {
+                    queue.tracks.splice(0, 1);
+                }
                 this.emit('trackEnded', queue, this.msg);
                 return this._playTrack(queue);
             });
         }
     }
     /**
-     * @param {discord.Message} message
      * clear the queue
+     * @param {discord.Message} message
      */
     clear(message) {
         const q = this.playerQueue.get(message.guild.id);
@@ -172,6 +176,7 @@ class Player extends events_1.EventEmitter {
         q.tracks.splice(0, q.tracks.length);
     }
     /**
+     * remove a track from the queue
      * @param {discord.Message} message
      * @param {number} postion index of the song to removed
      */
@@ -182,6 +187,7 @@ class Player extends events_1.EventEmitter {
         q.tracks.splice(postion, 1);
     }
     /**
+     * sets volume 0-100
      * @param {discord.Message} message
      * @param {number} volume number to which volume to be changed
      * @returns previous volume
@@ -197,7 +203,7 @@ class Player extends events_1.EventEmitter {
         return prevVolume;
     }
     /**
-     *
+     * pause the track
      * @param {discord.Message} message
      */
     pause(message) {
@@ -207,10 +213,12 @@ class Player extends events_1.EventEmitter {
             return this.emit('error', 'no player found');
         (_a = q.voiceConnection) === null || _a === void 0 ? void 0 : _a.dispatcher.pause();
         q.paused = true;
+        return q.paused;
     }
     /**
-     *
+     * resume the player
      * @param {discord.Message} message
+     * @return false
      */
     resume(message) {
         var _a;
@@ -219,10 +227,12 @@ class Player extends events_1.EventEmitter {
             return this.emit('error', 'no player found');
         (_a = q.voiceConnection) === null || _a === void 0 ? void 0 : _a.dispatcher.resume();
         q.paused = false;
+        return q.paused;
     }
     /**
-     *
+     * stops the track and bot leaves voice channel
      * @param {discord.Message} message
+     * @returns true
      */
     stop(message) {
         var _a, _b;
@@ -232,9 +242,12 @@ class Player extends events_1.EventEmitter {
         (_a = q.voiceConnection) === null || _a === void 0 ? void 0 : _a.dispatcher.end();
         (_b = q.voiceConnection) === null || _b === void 0 ? void 0 : _b.channel.leave();
         this.playerQueue.delete(message.guild.id);
+        return true;
     }
     /**
+     * now playing
      * @returns current playing music
+     * @return track
      */
     nowPlaying(message) {
         const q = this.playerQueue.get(message.guild.id);
@@ -247,19 +260,30 @@ class Player extends events_1.EventEmitter {
      * @param {discord.Message} message
      */
     skip(message) {
+        var _a;
+        const q = this.playerQueue.get(message.guild.id);
+        if (!q)
+            return this.emit('error', 'no player found');
+        (_a = q.voiceConnection) === null || _a === void 0 ? void 0 : _a.dispatcher.end();
     }
     /**
-     *
+     * loop mode
      * @param {discord.Message} message
      * @param {discord.Message} enabled
+     * @returns true if loop is enabled else false
      */
     setLoopMode(message, enabled) {
-    }
-    /**
-     *
-     * @param {discord.Message} message
-     */
-    shuffle(message) {
+        const q = this.playerQueue.get(message.guild.id);
+        if (!q)
+            return this.emit('error', 'no player found');
+        if (q.loop == false) {
+            q.loop = true;
+            return true;
+        }
+        else {
+            q.loop = false;
+            return false;
+        }
     }
 }
 exports.Player = Player;

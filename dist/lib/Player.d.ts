@@ -2,9 +2,13 @@
 import discord from 'discord.js';
 import { Queue } from './Queue';
 import { EventEmitter } from 'events';
-import { Track } from './tracks';
+import { Track } from './Tracks';
 /**
  * util type
+ */
+/**
+ * TODO
+ * TYPE CHECKING AND PARAMS CHECKING
  */
 export declare type Null<T> = T | null;
 export declare class Player extends EventEmitter {
@@ -39,7 +43,7 @@ export declare class Player extends EventEmitter {
      * @param {discord.Message} message discord message event
      * @param {string} track  a url
      */
-    protected _createQueue(message: discord.Message, track: Track): boolean | undefined;
+    protected _createQueue(message: discord.Message, track: Track): void | boolean;
     /**
      * @param {string} guildId guild id
      * @return queue for provided guild id
@@ -47,8 +51,9 @@ export declare class Player extends EventEmitter {
      * ```
      * const queue = player.getQueue('guildid');
      * ```
+     * @returns queue
      */
-    getQueue(message: discord.Message): boolean | Queue;
+    getQueue(message: discord.Message): Queue | boolean;
     /**
      * @param {discord.Message} msg messge event
      * @param  {string} argument string
@@ -60,60 +65,63 @@ export declare class Player extends EventEmitter {
      * })
      * ```
      */
-    play(msg: discord.Message, argument: string): Promise<void>;
+    play(msg: discord.Message, argument: string): Promise<void | boolean>;
     /**
+     * play track
      * @param {Queue} queue plays a track from queue
      */
-    protected _playTrack(queue: Queue): boolean | undefined;
+    protected _playTrack(queue: Queue): void | boolean;
     /**
-     * @param {discord.Message} message
      * clear the queue
+     * @param {discord.Message} message
      */
-    clear(message: discord.Message): boolean | undefined;
+    clear(message: discord.Message): void | boolean;
     /**
+     * remove a track from the queue
      * @param {discord.Message} message
      * @param {number} postion index of the song to removed
      */
-    remove(message: discord.Message, postion: number): boolean | undefined;
+    remove(message: discord.Message, postion: number): void | boolean;
     /**
+     * sets volume 0-100
      * @param {discord.Message} message
      * @param {number} volume number to which volume to be changed
      * @returns previous volume
      */
     setVolume(message: discord.Message, volume: number): number | boolean;
     /**
-     *
+     * pause the track
      * @param {discord.Message} message
      */
-    pause(message: discord.Message): boolean | undefined;
+    pause(message: discord.Message): boolean;
     /**
-     *
+     * resume the player
      * @param {discord.Message} message
+     * @return false
      */
-    resume(message: discord.Message): boolean | undefined;
+    resume(message: discord.Message): boolean;
     /**
-     *
+     * stops the track and bot leaves voice channel
      * @param {discord.Message} message
+     * @returns true
      */
-    stop(message: discord.Message): boolean | undefined;
+    stop(message: discord.Message): boolean;
     /**
+     * now playing
      * @returns current playing music
+     * @return track
      */
-    nowPlaying(message: discord.Message): boolean | Track;
+    nowPlaying(message: discord.Message): Track | boolean;
     /**
      *
      * @param {discord.Message} message
      */
-    skip(message: discord.Message): void;
+    skip(message: discord.Message): boolean | undefined;
     /**
-     *
+     * loop mode
      * @param {discord.Message} message
      * @param {discord.Message} enabled
+     * @returns true if loop is enabled else false
      */
-    setLoopMode(message: discord.Message, enabled: boolean): void;
-    /**
-     *
-     * @param {discord.Message} message
-     */
-    shuffle(message: discord.Message): void;
+    setLoopMode(message: discord.Message, enabled: boolean): boolean;
 }
