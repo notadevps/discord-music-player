@@ -3,16 +3,6 @@ import discord from 'discord.js';
 import { Track } from './Tracks';
 
 /**
- * 
- * @param {boolean} value Util function for changing the the property of a method 
- */
-
-function enumarable(value: boolean ) { 
-    return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) { 
-        descriptor.enumerable = value;
-    }
-}
-/**
  * util type
  */
 export type Null<T> = T | null; 
@@ -59,6 +49,7 @@ export class Queue {
     loop: boolean = false
     /**
      * filters to be added
+     * @type {Object}
      */
     filter: Object = {};
     /**
