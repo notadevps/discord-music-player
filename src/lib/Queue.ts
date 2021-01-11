@@ -57,7 +57,10 @@ export class Queue {
      * @type {boolean}
      */
     loop: boolean = false
-    
+    /**
+     * filters to be added
+     */
+    filter: Object = {};
     /**
      * 
      * @param {discord.Message} message 

@@ -46,6 +46,10 @@ export declare class Queue {
      */
     loop: boolean;
     /**
+     * filters to be added
+     */
+    filter: Object;
+    /**
      *
      * @param {discord.Message} message
      * @param {Track} track

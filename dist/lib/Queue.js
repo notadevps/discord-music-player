@@ -52,6 +52,10 @@ class Queue {
          * @type {boolean}
          */
         this.loop = false;
+        /**
+         * filters to be added
+         */
+        this.filter = {};
         this.message = message;
         this.tracks.push(track);
     }
