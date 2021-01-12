@@ -1,6 +1,6 @@
 const discord = require('discord.js'); 
 const client = new discord.Client();
-const { Player } = require ('discord-music-player');
+const { Player } = require ('discord-youtube-player');
 const player = new Player(client);
 //events
 player.on('trackAdded', (q, msg) => {

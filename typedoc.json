@@ -2,5 +2,5 @@
     "entryPoints": ["src/"], 
     "out": "docs", 
     "readme": "README.md", 
-    "name":  "Discord Music Player"
+    "name":  "Discord Youtube Player"
 }

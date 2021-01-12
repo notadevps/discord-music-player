@@ -1,0 +1,6 @@
+node_modules
+docs
+typedoc.json
+eslintrc.json
+src
+example

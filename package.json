@@ -1,4 +1,6 @@
 {
+  "name": "discord-youtube-player",
+  "version": "1.0.0",
   "dependencies": {
     "@discordjs/opus": "^0.3.3",
     "@types/ws": "^7.4.0",
