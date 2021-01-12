@@ -1,7 +1,8 @@
 const discord = require('discord.js'); 
 const client = new discord.Client();
-const { Player } = require ('../dist/index');
+const { Player } = require ('discord-music-player');
 const player = new Player(client);
+//events
 player.on('trackAdded', (q, msg) => {
     return msg.channel.send('Added');
 }); 
@@ -17,13 +18,14 @@ player.on('queueEnded' , (q, msg) => {
 player.on('queueCreated', (q, msg) => {
     msg.channel.send('Queue Created');
 })
+
 client.on('message', msg => {
     let arg =  msg.content.slice('+play'.length);
     if (msg.content.includes('+play')){
         player.play(msg, arg); 
     } else if (msg.content.includes('+q')) { 
         let c = player.getQueue(msg);
-        let x = ' '
+        let x = ' ';
         if (!c.tracks) { 
             return msg.channel.send('adawdadw');
         }

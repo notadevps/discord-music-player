@@ -1,6 +1,6 @@
 {
     "entryPoints": ["src/"], 
     "out": "docs", 
-    "readme": "READE.md", 
+    "readme": "README.md", 
     "name":  "Discord Music Player"
 }

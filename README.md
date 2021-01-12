@@ -42,3 +42,42 @@ player.on('queueEnded' , (q, msg) => {
 });
 
 ```
+
+# discord bot example
+```
+client.on('message', msg => {
+    let arg =  msg.content.slice('+play'.length);
+    if (msg.content.includes('+play')){
+        player.play(msg, arg); 
+    } else if (msg.content.includes('+q')) { 
+        let c = player.getQueue(msg);
+        console.log(c)
+    } else if (msg.content.includes('+clear')) { 
+        let  c = player.getQueue(msg);
+        c.clearQueue();
+    } else if (msg.content.includes('+isPlaying')){ 
+        let c = player.isPlaying();
+        return msg.channel.send(c);
+    } else if (msg.content.includes('+skip')) { 
+        player.skip(msg); 
+
+    } else if (msg.content.includes('+loop')) { 
+        let c = player.setLoopMode(msg, true);
+        return msg.channel.send(c);
+    } else if (msg.content.includes('+stop')) { 
+        let c = player.stop(msg); 
+        return msg.channel.send('done');
+    } else if (msg.content.includes('+volume')) { 
+        let volume = msg.content.slice('+volume'.length);
+       let c =  player.setVolume(msg, volume);
+       return msg.channel.send(c) ;
+    } else if (msg.content.includes('+pause')) { 
+        player.pause(); 
+        return msg.channel.send('paused')
+    } else if (msg.content.includes('+resume')) {
+        player.resume(); 
+        return msg.channel.send('resumed');
+    }
+});
+client.login('TOKEN');
+```

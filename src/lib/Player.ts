@@ -6,7 +6,6 @@ import { EventEmitter } from 'events';
 import { Track } from './Tracks';
 import ytr  from 'yt-search';
 import error from './Utils';
-import { Null } from './Utils';
 
 export class Player extends EventEmitter { 
     /**
