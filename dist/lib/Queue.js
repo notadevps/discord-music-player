@@ -1,15 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Queue = void 0;
-/**
- *
- * @param {boolean} value Util function for changing the the property of a method
- */
-function enumarable(value) {
-    return function (target, propertyKey, descriptor) {
-        descriptor.enumerable = value;
-    };
-}
 class Queue {
     /**
      *
@@ -52,10 +43,6 @@ class Queue {
          * @type {boolean}
          */
         this.loop = false;
-        /**
-         * filters to be added
-         */
-        this.filter = {};
         this.message = message;
         this.tracks.push(track);
     }

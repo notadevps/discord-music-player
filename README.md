@@ -21,3 +21,24 @@ trackEnded -> when a track is ended\
 queueEnded -> when ther is no tracks to play\ 
 trackAdded -> when a  track is added  in queue\
 error -> error occured
+
+
+# EXAMPLE
+```
+player.on('trackEnded', (q, msg) => {
+    return msg.channel.send('track ended');
+});
+player.on('trackAdded' , (q, msg) => {
+    return msg.channel.send('track added');
+});
+player.on('error', (e) => {
+    return msg.channel.send('error occured ' + e);
+});
+player.on('queueCreated', (q, msg) => {
+    return msg.channel.send('queueCreated');
+});
+player.on('queueEnded' , (q, msg) => {
+    return msg.channel.send('queueCreated');
+});
+
+```

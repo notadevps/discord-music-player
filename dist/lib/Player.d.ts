@@ -3,14 +3,6 @@ import discord from 'discord.js';
 import { Queue } from './Queue';
 import { EventEmitter } from 'events';
 import { Track } from './Tracks';
-/**
- * util type
- */
-/**
- * TODO
- * TYPE CHECKING AND PARAMS CHECKING
- */
-export declare type Null<T> = T | null;
 export declare class Player extends EventEmitter {
     /**
      * client
@@ -22,11 +14,6 @@ export declare class Player extends EventEmitter {
      * @type {Map<string, Queue>}
      */
     playerQueue: Map<string, Queue>;
-    /**
-     * discord message
-     * @type {discord.Message | null = null}
-     */
-    msg: Null<discord.Message>;
     /**
      *
      * @param {discord.Client} client  discord client
@@ -118,10 +105,9 @@ export declare class Player extends EventEmitter {
      */
     skip(message: discord.Message): boolean | undefined;
     /**
-     * loop mode
+     * enables loop mode
      * @param {discord.Message} message
-     * @param {discord.Message} enabled
      * @returns true if loop is enabled else false
      */
-    setLoopMode(message: discord.Message, enabled: boolean): boolean;
+    setLoopMode(message: discord.Message): boolean;
 }

@@ -1,11 +1,7 @@
 
 import discord from 'discord.js';
 import { Track } from './Tracks';
-
-/**
- * util type
- */
-export type Null<T> = T | null; 
+import { Null } from './Utils'; 
 export class Queue { 
     /**
      * array of tracks
@@ -47,11 +43,6 @@ export class Queue {
      * @type {boolean}
      */
     loop: boolean = false
-    /**
-     * filters to be added
-     * @type {Object}
-     */
-    filter: Object = {};
     /**
      * 
      * @param {discord.Message} message 

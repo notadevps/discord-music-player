@@ -48,6 +48,16 @@ client.on('message', msg => {
     } else if (msg.content.includes('+stop')) { 
         let c = player.stop(msg); 
         return msg.channel.send('done');
+    } else if (msg.content.includes('+volume')) { 
+        let volume = msg.content.slice('+volume'.length);
+       let c =  player.setVolume(msg, volume);
+       return msg.channel.send(c) ;
+    } else if (msg.content.includes('+pause')) { 
+        player.pause(); 
+        return msg.channel.send('paused')
+    } else if (msg.content.includes('+resume')) {
+        player.resume(); 
+        return msg.channel.send('resumed');
     }
 });
-client.login('TOKEN');
+client.login('NzU3ODkxMjgyNDQ5MjAzMjEw.X2m_Qg.1N2D9GFRhJXxJyb3PxDzf8TiBuM');

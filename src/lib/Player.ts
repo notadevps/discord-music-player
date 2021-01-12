@@ -5,15 +5,8 @@ import { Queue }  from './Queue';
 import { EventEmitter } from 'events';
 import { Track } from './Tracks';
 import ytr  from 'yt-search';
-/**
- * util type
- */
-
- /**
-  * TODO
-  * TYPE CHECKING AND PARAMS CHECKING
-  */
-export type Null<T> = T | null
+import error from './Utils';
+import { Null } from './Utils';
 
 export class Player extends EventEmitter { 
     /**
@@ -26,12 +19,6 @@ export class Player extends EventEmitter {
      * @type {Map<string, Queue>} 
      */ 
     playerQueue: Map<string, Queue>; 
-    /**
-     * discord message 
-     * @type {discord.Message | null = null}
-     */
-    msg: Null<discord.Message> = null;
-
     /**
      * 
      * @param {discord.Client} client  discord client
@@ -69,7 +56,7 @@ export class Player extends EventEmitter {
             });
         } else {
             q.tracks.push(track);
-            this.emit('trackAdded', q, message);
+            this.emit('trackAdded', q, q.message);
         }
     }
 
@@ -83,9 +70,12 @@ export class Player extends EventEmitter {
      * @returns queue
      */
     getQueue(message: discord.Message): Queue | boolean { 
+        if (!message) { 
+            return error('argument cannot me empty');
+        }
         let q = this.playerQueue.get(message.guild!.id);
         if (!q) { 
-            return this.emit('error', 'no player playing', this.msg); 
+            return this.emit('error', 'no player playing', message); 
         }
         return q;
     }
@@ -102,7 +92,12 @@ export class Player extends EventEmitter {
      * ```
      */
     async play(msg: discord.Message, argument: string): Promise<void | boolean> {
-        this.msg = msg;
+        if (!msg) { 
+            return error('2 arguments expected '); 
+        }
+        if (!argument || typeof argument !== 'string') { 
+            return error('search track cannot be empty');
+        }
         let arg; 
         if (argument.includes('https://') && argument.includes('youtube.com')) { 
             arg = argument;
@@ -133,21 +128,15 @@ export class Player extends EventEmitter {
      * @param {Queue} queue plays a track from queue 
      */
     protected _playTrack(queue: Queue): void | boolean{ 
-        if (!this.msg) { 
-            return this.emit('error', 'no player found');
-        }
         if (!queue.message?.member?.voice.channel){ 
-            this.msg = null; 
-            return this.emit('error', 'should be in vc', queue , this.msg);
+            return this.emit('error', 'should be in vc', queue, queue.message);
         }
         if (!queue.voiceConnection) {
-            this.msg = null; 
-            return this.emit('error', 'no connection found', queue, this.msg);
+            return this.emit('error', 'no connection found', queue, queue.message);
         }
         if (queue.tracks.length <= 0 ) { 
             queue.message.member.voice.channel.leave();
-            this.emit('queueEnded', queue , this.msg); 
-            this.msg = null;
+            this.emit('queueEnded', queue, queue.message); 
             return;
         }
         if (queue.tracks[0].url){
@@ -166,7 +155,7 @@ export class Player extends EventEmitter {
                 if (queue.loop === false) { 
                     queue.tracks.splice(0, 1);
                 }
-                this.emit('trackEnded', queue, this.msg);
+                this.emit('trackEnded', queue, queue.message);
                 return this._playTrack(queue);
             });
         }
@@ -177,6 +166,9 @@ export class Player extends EventEmitter {
      * @param {discord.Message} message
      */
     clear(message: discord.Message): void | boolean { 
+        if (!message) {
+            return error('agrument expected');
+        }
         const q = this.playerQueue.get(message.guild!.id);
         if (!q) return this.emit('error', 'no player found') 
         q.tracks.splice(0, q.tracks.length );
@@ -188,6 +180,12 @@ export class Player extends EventEmitter {
      * @param {number} postion index of the song to removed  
      */
     remove(message: discord.Message, postion: number): void | boolean { 
+        if (!message) {
+            return error('2 arguments expected');
+        }
+        if (!postion || typeof postion !== 'number') { 
+            return error('argument position cannot be empty');
+        }
         const q = this.playerQueue.get(message.guild!.id);
         if (!q) return this.emit('error', 'no player found')
         q.tracks.splice(postion, 1);
@@ -200,12 +198,17 @@ export class Player extends EventEmitter {
      * @returns previous volume
      */
     setVolume(message: discord.Message, volume: number): number | boolean {
+        if (!message) { 
+            return error('2 arguments expected');
+        }
+        if (!volume || typeof volume !== 'number') {
+            return error('argument should be number');
+        }
         const q = this.playerQueue.get(message.guild!.id);
-        if (!q) return this.emit('error', 'no player found')
-        const prevVolume = q.volume;  
+        if (!q) return this.emit('error', 'no player found')  
         q.voiceConnection?.dispatcher.setVolumeLogarithmic(q.volume / 200);
         q.volume = volume;
-        return prevVolume;
+        return q.volume
     }
 
     /**
@@ -213,6 +216,9 @@ export class Player extends EventEmitter {
      * @param {discord.Message} message 
      */
     pause(message: discord.Message):  boolean{
+        if (!message) { 
+            return error(' argument expected');
+        }
         const q = this.playerQueue.get(message.guild!.id);
         if (!q) return this.emit('error', 'no player found')
         q.voiceConnection?.dispatcher.pause(); 
@@ -225,7 +231,10 @@ export class Player extends EventEmitter {
      * @param {discord.Message} message 
      * @return false 
      */
-    resume(message: discord.Message): boolean{ 
+    resume(message: discord.Message): boolean{
+        if (!message) { 
+            return error('argument expected');
+        }
         const q = this.playerQueue.get(message.guild!.id);
         if (!q) return this.emit('error', 'no player found')
         q.voiceConnection?.dispatcher.resume(); 
@@ -239,6 +248,9 @@ export class Player extends EventEmitter {
      * @returns true 
      */
     stop(message: discord.Message): boolean { 
+        if (!message) { 
+            return error(' argument expected');
+        }
         const q = this.playerQueue.get(message.guild!.id);
         if (!q) return this.emit('error', 'no player found');
         q.voiceConnection?.dispatcher.end();
@@ -253,6 +265,9 @@ export class Player extends EventEmitter {
      * @return track
      */
     nowPlaying(message: discord.Message): Track | boolean { 
+        if (!message) { 
+            return error('argument expected');
+        }
         const q = this.playerQueue.get(message.guild!.id);
         if (!q) return this.emit('error', 'no player found')
         return q.tracks[0];
@@ -263,18 +278,23 @@ export class Player extends EventEmitter {
      * @param {discord.Message} message 
      */
     skip(message: discord.Message) {
+        if (!message) { 
+            return error(' argument expected');
+        }
         const q = this.playerQueue.get(message.guild!.id); 
         if(!q) return this.emit('error', 'no player found'); 
         q.voiceConnection?.dispatcher.end();
     }
 
     /**
-     * loop mode  
+     * enables loop mode
      * @param {discord.Message} message 
-     * @param {discord.Message} enabled 
      * @returns true if loop is enabled else false 
      */
-    setLoopMode(message: discord.Message, enabled: boolean ): boolean {
+    setLoopMode(message: discord.Message): boolean {
+        if (!message) { 
+            return error(' argument expected');
+        }
         const q = this.playerQueue.get(message.guild!.id); 
         if(!q) return this.emit('error', 'no player found'); 
         if (q.loop == false ) { 
@@ -285,15 +305,6 @@ export class Player extends EventEmitter {
             return false;
         }
     }
-    
-    /**
-     * 
-     * @param {Object} filter 
-     */
-    setFilter(filter: Object) { 
-
-    }
-
 }
 
 

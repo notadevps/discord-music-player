@@ -18,6 +18,7 @@ const Queue_1 = require("./Queue");
 const events_1 = require("events");
 const Tracks_1 = require("./Tracks");
 const yt_search_1 = __importDefault(require("yt-search"));
+const Utils_1 = __importDefault(require("./Utils"));
 class Player extends events_1.EventEmitter {
     /**
      *
@@ -32,11 +33,6 @@ class Player extends events_1.EventEmitter {
      */
     constructor(client) {
         super();
-        /**
-         * discord message
-         * @type {discord.Message | null = null}
-         */
-        this.msg = null;
         this.playerClient = client;
         this.playerQueue = new Map();
     }
@@ -63,7 +59,7 @@ class Player extends events_1.EventEmitter {
         }
         else {
             q.tracks.push(track);
-            this.emit('trackAdded', q, message);
+            this.emit('trackAdded', q, q.message);
         }
     }
     /**
@@ -76,9 +72,12 @@ class Player extends events_1.EventEmitter {
      * @returns queue
      */
     getQueue(message) {
+        if (!message) {
+            return Utils_1.default('argument cannot me empty');
+        }
         let q = this.playerQueue.get(message.guild.id);
         if (!q) {
-            return this.emit('error', 'no player playing', this.msg);
+            return this.emit('error', 'no player playing', message);
         }
         return q;
     }
@@ -95,7 +94,12 @@ class Player extends events_1.EventEmitter {
      */
     play(msg, argument) {
         return __awaiter(this, void 0, void 0, function* () {
-            this.msg = msg;
+            if (!msg) {
+                return Utils_1.default('2 arguments expected ');
+            }
+            if (!argument || typeof argument !== 'string') {
+                return Utils_1.default('search track cannot be empty');
+            }
             let arg;
             if (argument.includes('https://') && argument.includes('youtube.com')) {
                 arg = argument;
@@ -128,27 +132,22 @@ class Player extends events_1.EventEmitter {
      */
     _playTrack(queue) {
         var _a, _b;
-        if (!this.msg) {
-            return this.emit('error', 'no player found');
-        }
         if (!((_b = (_a = queue.message) === null || _a === void 0 ? void 0 : _a.member) === null || _b === void 0 ? void 0 : _b.voice.channel)) {
-            this.msg = null;
-            return this.emit('error', 'should be in vc', queue, this.msg);
+            return this.emit('error', 'should be in vc', queue, queue.message);
         }
         if (!queue.voiceConnection) {
-            this.msg = null;
-            return this.emit('error', 'no connection found', queue, this.msg);
+            return this.emit('error', 'no connection found', queue, queue.message);
         }
         if (queue.tracks.length <= 0) {
             queue.message.member.voice.channel.leave();
-            this.emit('queueEnded', queue, this.msg);
-            this.msg = null;
+            this.emit('queueEnded', queue, queue.message);
             return;
         }
         if (queue.tracks[0].url) {
             let stream = discord_ytdl_core_1.default(queue.tracks[0].url, {
                 filter: 'audioonly',
                 opusEncoded: true,
+                highWaterMark: 1 << 25
             });
             if (queue.stream) {
                 queue.stream.destroy();
@@ -160,7 +159,7 @@ class Player extends events_1.EventEmitter {
                 if (queue.loop === false) {
                     queue.tracks.splice(0, 1);
                 }
-                this.emit('trackEnded', queue, this.msg);
+                this.emit('trackEnded', queue, queue.message);
                 return this._playTrack(queue);
             });
         }
@@ -170,6 +169,9 @@ class Player extends events_1.EventEmitter {
      * @param {discord.Message} message
      */
     clear(message) {
+        if (!message) {
+            return Utils_1.default('agrument expected');
+        }
         const q = this.playerQueue.get(message.guild.id);
         if (!q)
             return this.emit('error', 'no player found');
@@ -181,6 +183,12 @@ class Player extends events_1.EventEmitter {
      * @param {number} postion index of the song to removed
      */
     remove(message, postion) {
+        if (!message) {
+            return Utils_1.default('2 arguments expected');
+        }
+        if (!postion || typeof postion !== 'number') {
+            return Utils_1.default('argument position cannot be empty');
+        }
         const q = this.playerQueue.get(message.guild.id);
         if (!q)
             return this.emit('error', 'no player found');
@@ -194,13 +202,18 @@ class Player extends events_1.EventEmitter {
      */
     setVolume(message, volume) {
         var _a;
+        if (!message) {
+            return Utils_1.default('2 arguments expected');
+        }
+        if (!volume || typeof volume !== 'number') {
+            return Utils_1.default('argument should be number');
+        }
         const q = this.playerQueue.get(message.guild.id);
         if (!q)
             return this.emit('error', 'no player found');
-        const prevVolume = q.volume;
         (_a = q.voiceConnection) === null || _a === void 0 ? void 0 : _a.dispatcher.setVolumeLogarithmic(q.volume / 200);
         q.volume = volume;
-        return prevVolume;
+        return q.volume;
     }
     /**
      * pause the track
@@ -208,6 +221,9 @@ class Player extends events_1.EventEmitter {
      */
     pause(message) {
         var _a;
+        if (!message) {
+            return Utils_1.default(' argument expected');
+        }
         const q = this.playerQueue.get(message.guild.id);
         if (!q)
             return this.emit('error', 'no player found');
@@ -222,6 +238,9 @@ class Player extends events_1.EventEmitter {
      */
     resume(message) {
         var _a;
+        if (!message) {
+            return Utils_1.default('argument expected');
+        }
         const q = this.playerQueue.get(message.guild.id);
         if (!q)
             return this.emit('error', 'no player found');
@@ -236,6 +255,9 @@ class Player extends events_1.EventEmitter {
      */
     stop(message) {
         var _a, _b;
+        if (!message) {
+            return Utils_1.default(' argument expected');
+        }
         const q = this.playerQueue.get(message.guild.id);
         if (!q)
             return this.emit('error', 'no player found');
@@ -250,6 +272,9 @@ class Player extends events_1.EventEmitter {
      * @return track
      */
     nowPlaying(message) {
+        if (!message) {
+            return Utils_1.default('argument expected');
+        }
         const q = this.playerQueue.get(message.guild.id);
         if (!q)
             return this.emit('error', 'no player found');
@@ -261,18 +286,23 @@ class Player extends events_1.EventEmitter {
      */
     skip(message) {
         var _a;
+        if (!message) {
+            return Utils_1.default(' argument expected');
+        }
         const q = this.playerQueue.get(message.guild.id);
         if (!q)
             return this.emit('error', 'no player found');
         (_a = q.voiceConnection) === null || _a === void 0 ? void 0 : _a.dispatcher.end();
     }
     /**
-     * loop mode
+     * enables loop mode
      * @param {discord.Message} message
-     * @param {discord.Message} enabled
      * @returns true if loop is enabled else false
      */
-    setLoopMode(message, enabled) {
+    setLoopMode(message) {
+        if (!message) {
+            return Utils_1.default(' argument expected');
+        }
         const q = this.playerQueue.get(message.guild.id);
         if (!q)
             return this.emit('error', 'no player found');

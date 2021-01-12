@@ -1,4 +1,4 @@
-
+import { Null } from './Utils';
 export interface videoDetails { 
     thumbnailUrl: string; 
     title: string;
@@ -12,7 +12,6 @@ export interface videoDetails {
 /**
  * @class Track
  */
-export type Null<T> = T | null;
 export class Track { 
     /**
      * thumbnail url 
