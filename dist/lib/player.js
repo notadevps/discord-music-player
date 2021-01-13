@@ -262,6 +262,7 @@ class Player extends events_1.EventEmitter {
         if (!q)
             return this.emit('error', 'no player found');
         (_a = q.voiceConnection) === null || _a === void 0 ? void 0 : _a.dispatcher.end();
+        ;
         (_b = q.voiceConnection) === null || _b === void 0 ? void 0 : _b.channel.leave();
         this.playerQueue.delete(message.guild.id);
         return true;

@@ -252,7 +252,7 @@ export class Player extends EventEmitter {
         }
         const q = this.playerQueue.get(message.guild!.id);
         if (!q) return this.emit('error', 'no player found');
-        q.voiceConnection?.dispatcher.end();
+        q.voiceConnection?.dispatcher.end();;
         q.voiceConnection?.channel.leave();
         this.playerQueue.delete(message.guild!.id);
         return true

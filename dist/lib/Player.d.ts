@@ -1,4 +1,3 @@
-/// <reference types="node" />
 import discord from 'discord.js';
 import { Queue } from './Queue';
 import { EventEmitter } from 'events';
