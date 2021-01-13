@@ -59,6 +59,7 @@ const client = new discord.Client();
 const { Player } = require('discord-youtube-player'); 
 const player = new Player(client);
 client.on('message', msg => {
+    
     //search argument
     let arg =  msg.content.slice('+play'.length);
     if (msg.content.includes('+play')){
