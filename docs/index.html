@@ -3,8 +3,8 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>Discord Music Player</title>
-	<meta name="description" content="Documentation for Discord Music Player">
+	<title>Discord Youtube Player</title>
+	<meta name="description" content="Documentation for Discord Youtube Player">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="assets/css/main.css">
 	<script async src="assets/js/search.js" id="search-script"></script>
@@ -23,7 +23,7 @@
 						<li class="state loading">Preparing search index...</li>
 						<li class="state failure">The search index is not available</li>
 					</ul>
-					<a href="index.html" class="title">Discord Music Player</a>
+					<a href="index.html" class="title">Discord Youtube Player</a>
 				</div>
 				<div class="table-cell" id="tsd-widgets">
 					<div id="tsd-filter">
@@ -50,7 +50,7 @@
 	</div>
 	<div class="tsd-page-title">
 		<div class="container">
-			<h1>Discord Music Player</h1>
+			<h1>Discord Youtube Player</h1>
 		</div>
 	</div>
 </header>
@@ -59,7 +59,7 @@
 		<div class="col-8 col-content">
 			<div class="tsd-panel tsd-typography">
 				<p>Discord Music Player
-				a music player based on discord.js <a href="https://discord.js.org/#/">link</a><br>with typescript support </p>
+				a music player based on <a href="https://discord.js.org/#/">discord.js</a><br>with typescript support </p>
 				<a href="#quickstart" id="quickstart" style="color: inherit; text-decoration: none;">
 					<h1>Quickstart</h1>
 				</a>
@@ -79,58 +79,80 @@
 				<a href="#example" id="example" style="color: inherit; text-decoration: none;">
 					<h1>EXAMPLE</h1>
 				</a>
-				<pre><code><span style="color: #001080">player</span><span style="color: #000000">.</span><span style="color: #795E26">on</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;trackEnded&#039;</span><span style="color: #000000">, (</span><span style="color: #001080">q</span><span style="color: #000000">, </span><span style="color: #001080">msg</span><span style="color: #000000">) </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
+				<pre><code><span style="color: #008000">//trackEnded</span>
+<span style="color: #001080">player</span><span style="color: #000000">.</span><span style="color: #795E26">on</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;trackEnded&#039;</span><span style="color: #000000">, (</span><span style="color: #001080">q</span><span style="color: #000000">, </span><span style="color: #001080">msg</span><span style="color: #000000">) </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
 <span style="color: #000000">    </span><span style="color: #AF00DB">return</span><span style="color: #000000"> </span><span style="color: #001080">msg</span><span style="color: #000000">.</span><span style="color: #001080">channel</span><span style="color: #000000">.</span><span style="color: #795E26">send</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;track ended&#039;</span><span style="color: #000000">);</span>
-<span style="color: #000000">});</span>
+<span style="color: #000000">})</span>
+
+<span style="color: #008000">//trackAdded</span>
 <span style="color: #001080">player</span><span style="color: #000000">.</span><span style="color: #795E26">on</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;trackAdded&#039;</span><span style="color: #000000"> , (</span><span style="color: #001080">q</span><span style="color: #000000">, </span><span style="color: #001080">msg</span><span style="color: #000000">) </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
 <span style="color: #000000">    </span><span style="color: #AF00DB">return</span><span style="color: #000000"> </span><span style="color: #001080">msg</span><span style="color: #000000">.</span><span style="color: #001080">channel</span><span style="color: #000000">.</span><span style="color: #795E26">send</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;track added&#039;</span><span style="color: #000000">);</span>
-<span style="color: #000000">});</span>
+<span style="color: #000000">})</span>
+
+<span style="color: #008000">//error</span>
 <span style="color: #001080">player</span><span style="color: #000000">.</span><span style="color: #795E26">on</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;error&#039;</span><span style="color: #000000">, (</span><span style="color: #001080">e</span><span style="color: #000000">) </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
 <span style="color: #000000">    </span><span style="color: #AF00DB">return</span><span style="color: #000000"> </span><span style="color: #001080">msg</span><span style="color: #000000">.</span><span style="color: #001080">channel</span><span style="color: #000000">.</span><span style="color: #795E26">send</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;error occured &#039;</span><span style="color: #000000"> + </span><span style="color: #001080">e</span><span style="color: #000000">);</span>
-<span style="color: #000000">});</span>
+<span style="color: #000000">})</span>
+
+<span style="color: #008000">//queueCreated</span>
 <span style="color: #001080">player</span><span style="color: #000000">.</span><span style="color: #795E26">on</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;queueCreated&#039;</span><span style="color: #000000">, (</span><span style="color: #001080">q</span><span style="color: #000000">, </span><span style="color: #001080">msg</span><span style="color: #000000">) </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
 <span style="color: #000000">    </span><span style="color: #AF00DB">return</span><span style="color: #000000"> </span><span style="color: #001080">msg</span><span style="color: #000000">.</span><span style="color: #001080">channel</span><span style="color: #000000">.</span><span style="color: #795E26">send</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;queueCreated&#039;</span><span style="color: #000000">);</span>
-<span style="color: #000000">});</span>
+<span style="color: #000000">})</span>
+
+<span style="color: #008000">//queueEnded</span>
 <span style="color: #001080">player</span><span style="color: #000000">.</span><span style="color: #795E26">on</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;queueEnded&#039;</span><span style="color: #000000"> , (</span><span style="color: #001080">q</span><span style="color: #000000">, </span><span style="color: #001080">msg</span><span style="color: #000000">) </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
 <span style="color: #000000">    </span><span style="color: #AF00DB">return</span><span style="color: #000000"> </span><span style="color: #001080">msg</span><span style="color: #000000">.</span><span style="color: #001080">channel</span><span style="color: #000000">.</span><span style="color: #795E26">send</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;queueCreated&#039;</span><span style="color: #000000">);</span>
-<span style="color: #000000">});</span>
+<span style="color: #000000">})</span>
 
 </code></pre>
 				<a href="#discord-bot-example" id="discord-bot-example" style="color: inherit; text-decoration: none;">
 					<h1>discord bot example</h1>
 				</a>
-				<pre><code><span style="color: #001080">client</span><span style="color: #000000">.</span><span style="color: #795E26">on</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;message&#039;</span><span style="color: #000000">, </span><span style="color: #001080">msg</span><span style="color: #000000"> </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
+				<pre><code><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">discord</span><span style="color: #000000"> = </span><span style="color: #795E26">require</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;discord.js&#039;</span><span style="color: #000000">);</span>
+<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">client</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #267F99">discord</span><span style="color: #000000">.</span><span style="color: #267F99">Client</span><span style="color: #000000">(); </span>
+<span style="color: #0000FF">const</span><span style="color: #000000"> { </span><span style="color: #0070C1">Player</span><span style="color: #000000"> } = </span><span style="color: #795E26">require</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;discord-youtube-player&#039;</span><span style="color: #000000">); </span>
+<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">player</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #267F99">Player</span><span style="color: #000000">(</span><span style="color: #001080">client</span><span style="color: #000000">);</span>
+<span style="color: #001080">client</span><span style="color: #000000">.</span><span style="color: #795E26">on</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;message&#039;</span><span style="color: #000000">, </span><span style="color: #001080">msg</span><span style="color: #000000"> </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
+<span style="color: #000000">    </span><span style="color: #008000">//search argument</span>
 <span style="color: #000000">    </span><span style="color: #0000FF">let</span><span style="color: #000000"> </span><span style="color: #001080">arg</span><span style="color: #000000"> =  </span><span style="color: #001080">msg</span><span style="color: #000000">.</span><span style="color: #001080">content</span><span style="color: #000000">.</span><span style="color: #795E26">slice</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;+play&#039;</span><span style="color: #000000">.</span><span style="color: #001080">length</span><span style="color: #000000">);</span>
 <span style="color: #000000">    </span><span style="color: #AF00DB">if</span><span style="color: #000000"> (</span><span style="color: #001080">msg</span><span style="color: #000000">.</span><span style="color: #001080">content</span><span style="color: #000000">.</span><span style="color: #795E26">includes</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;+play&#039;</span><span style="color: #000000">)){</span>
-<span style="color: #000000">        </span><span style="color: #001080">player</span><span style="color: #000000">.</span><span style="color: #795E26">play</span><span style="color: #000000">(</span><span style="color: #001080">msg</span><span style="color: #000000">, </span><span style="color: #001080">arg</span><span style="color: #000000">); </span>
+<span style="color: #000000">        </span><span style="color: #008000">//play from yt </span>
+<span style="color: #000000">        </span><span style="color: #001080">player</span><span style="color: #000000">.</span><span style="color: #795E26">play</span><span style="color: #000000">(</span><span style="color: #001080">msg</span><span style="color: #000000">, </span><span style="color: #001080">arg</span><span style="color: #000000">)</span>
+
 <span style="color: #000000">    } </span><span style="color: #AF00DB">else</span><span style="color: #000000"> </span><span style="color: #AF00DB">if</span><span style="color: #000000"> (</span><span style="color: #001080">msg</span><span style="color: #000000">.</span><span style="color: #001080">content</span><span style="color: #000000">.</span><span style="color: #795E26">includes</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;+q&#039;</span><span style="color: #000000">)) { </span>
+<span style="color: #000000">       </span><span style="color: #008000">//get queue</span>
 <span style="color: #000000">        </span><span style="color: #0000FF">let</span><span style="color: #000000"> </span><span style="color: #001080">c</span><span style="color: #000000"> = </span><span style="color: #001080">player</span><span style="color: #000000">.</span><span style="color: #795E26">getQueue</span><span style="color: #000000">(</span><span style="color: #001080">msg</span><span style="color: #000000">);</span>
-<span style="color: #000000">        </span><span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span><span style="color: #001080">c</span><span style="color: #000000">)</span>
+
 <span style="color: #000000">    } </span><span style="color: #AF00DB">else</span><span style="color: #000000"> </span><span style="color: #AF00DB">if</span><span style="color: #000000"> (</span><span style="color: #001080">msg</span><span style="color: #000000">.</span><span style="color: #001080">content</span><span style="color: #000000">.</span><span style="color: #795E26">includes</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;+clear&#039;</span><span style="color: #000000">)) { </span>
+<span style="color: #000000">        </span><span style="color: #008000">//clear queue</span>
 <span style="color: #000000">        </span><span style="color: #0000FF">let</span><span style="color: #000000">  </span><span style="color: #001080">c</span><span style="color: #000000"> = </span><span style="color: #001080">player</span><span style="color: #000000">.</span><span style="color: #795E26">getQueue</span><span style="color: #000000">(</span><span style="color: #001080">msg</span><span style="color: #000000">);</span>
 <span style="color: #000000">        </span><span style="color: #001080">c</span><span style="color: #000000">.</span><span style="color: #795E26">clearQueue</span><span style="color: #000000">();</span>
-<span style="color: #000000">    } </span><span style="color: #AF00DB">else</span><span style="color: #000000"> </span><span style="color: #AF00DB">if</span><span style="color: #000000"> (</span><span style="color: #001080">msg</span><span style="color: #000000">.</span><span style="color: #001080">content</span><span style="color: #000000">.</span><span style="color: #795E26">includes</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;+isPlaying&#039;</span><span style="color: #000000">)){ </span>
-<span style="color: #000000">        </span><span style="color: #0000FF">let</span><span style="color: #000000"> </span><span style="color: #001080">c</span><span style="color: #000000"> = </span><span style="color: #001080">player</span><span style="color: #000000">.</span><span style="color: #795E26">isPlaying</span><span style="color: #000000">();</span>
-<span style="color: #000000">        </span><span style="color: #AF00DB">return</span><span style="color: #000000"> </span><span style="color: #001080">msg</span><span style="color: #000000">.</span><span style="color: #001080">channel</span><span style="color: #000000">.</span><span style="color: #795E26">send</span><span style="color: #000000">(</span><span style="color: #001080">c</span><span style="color: #000000">);</span>
+
 <span style="color: #000000">    } </span><span style="color: #AF00DB">else</span><span style="color: #000000"> </span><span style="color: #AF00DB">if</span><span style="color: #000000"> (</span><span style="color: #001080">msg</span><span style="color: #000000">.</span><span style="color: #001080">content</span><span style="color: #000000">.</span><span style="color: #795E26">includes</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;+skip&#039;</span><span style="color: #000000">)) { </span>
+<span style="color: #000000">       </span><span style="color: #008000">//skip</span>
 <span style="color: #000000">        </span><span style="color: #001080">player</span><span style="color: #000000">.</span><span style="color: #795E26">skip</span><span style="color: #000000">(</span><span style="color: #001080">msg</span><span style="color: #000000">); </span>
 
 <span style="color: #000000">    } </span><span style="color: #AF00DB">else</span><span style="color: #000000"> </span><span style="color: #AF00DB">if</span><span style="color: #000000"> (</span><span style="color: #001080">msg</span><span style="color: #000000">.</span><span style="color: #001080">content</span><span style="color: #000000">.</span><span style="color: #795E26">includes</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;+loop&#039;</span><span style="color: #000000">)) { </span>
+<span style="color: #000000">        </span><span style="color: #008000">//loop</span>
 <span style="color: #000000">        </span><span style="color: #0000FF">let</span><span style="color: #000000"> </span><span style="color: #001080">c</span><span style="color: #000000"> = </span><span style="color: #001080">player</span><span style="color: #000000">.</span><span style="color: #795E26">setLoopMode</span><span style="color: #000000">(</span><span style="color: #001080">msg</span><span style="color: #000000">, </span><span style="color: #0000FF">true</span><span style="color: #000000">);</span>
-<span style="color: #000000">        </span><span style="color: #AF00DB">return</span><span style="color: #000000"> </span><span style="color: #001080">msg</span><span style="color: #000000">.</span><span style="color: #001080">channel</span><span style="color: #000000">.</span><span style="color: #795E26">send</span><span style="color: #000000">(</span><span style="color: #001080">c</span><span style="color: #000000">);</span>
+
 <span style="color: #000000">    } </span><span style="color: #AF00DB">else</span><span style="color: #000000"> </span><span style="color: #AF00DB">if</span><span style="color: #000000"> (</span><span style="color: #001080">msg</span><span style="color: #000000">.</span><span style="color: #001080">content</span><span style="color: #000000">.</span><span style="color: #795E26">includes</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;+stop&#039;</span><span style="color: #000000">)) { </span>
+<span style="color: #000000">       </span><span style="color: #008000">//stop</span>
 <span style="color: #000000">        </span><span style="color: #0000FF">let</span><span style="color: #000000"> </span><span style="color: #001080">c</span><span style="color: #000000"> = </span><span style="color: #001080">player</span><span style="color: #000000">.</span><span style="color: #795E26">stop</span><span style="color: #000000">(</span><span style="color: #001080">msg</span><span style="color: #000000">); </span>
-<span style="color: #000000">        </span><span style="color: #AF00DB">return</span><span style="color: #000000"> </span><span style="color: #001080">msg</span><span style="color: #000000">.</span><span style="color: #001080">channel</span><span style="color: #000000">.</span><span style="color: #795E26">send</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;done&#039;</span><span style="color: #000000">);</span>
+
 <span style="color: #000000">    } </span><span style="color: #AF00DB">else</span><span style="color: #000000"> </span><span style="color: #AF00DB">if</span><span style="color: #000000"> (</span><span style="color: #001080">msg</span><span style="color: #000000">.</span><span style="color: #001080">content</span><span style="color: #000000">.</span><span style="color: #795E26">includes</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;+volume&#039;</span><span style="color: #000000">)) { </span>
+<span style="color: #000000">        </span><span style="color: #008000">//volume</span>
 <span style="color: #000000">        </span><span style="color: #0000FF">let</span><span style="color: #000000"> </span><span style="color: #001080">volume</span><span style="color: #000000"> = </span><span style="color: #001080">msg</span><span style="color: #000000">.</span><span style="color: #001080">content</span><span style="color: #000000">.</span><span style="color: #795E26">slice</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;+volume&#039;</span><span style="color: #000000">.</span><span style="color: #001080">length</span><span style="color: #000000">);</span>
-<span style="color: #000000">       </span><span style="color: #0000FF">let</span><span style="color: #000000"> </span><span style="color: #001080">c</span><span style="color: #000000"> =  </span><span style="color: #001080">player</span><span style="color: #000000">.</span><span style="color: #795E26">setVolume</span><span style="color: #000000">(</span><span style="color: #001080">msg</span><span style="color: #000000">, </span><span style="color: #001080">volume</span><span style="color: #000000">);</span>
-<span style="color: #000000">       </span><span style="color: #AF00DB">return</span><span style="color: #000000"> </span><span style="color: #001080">msg</span><span style="color: #000000">.</span><span style="color: #001080">channel</span><span style="color: #000000">.</span><span style="color: #795E26">send</span><span style="color: #000000">(</span><span style="color: #001080">c</span><span style="color: #000000">) ;</span>
+<span style="color: #000000">        </span><span style="color: #0000FF">let</span><span style="color: #000000"> </span><span style="color: #001080">c</span><span style="color: #000000"> =  </span><span style="color: #001080">player</span><span style="color: #000000">.</span><span style="color: #795E26">setVolume</span><span style="color: #000000">(</span><span style="color: #001080">msg</span><span style="color: #000000">, </span><span style="color: #001080">volume</span><span style="color: #000000">);</span>
+
 <span style="color: #000000">    } </span><span style="color: #AF00DB">else</span><span style="color: #000000"> </span><span style="color: #AF00DB">if</span><span style="color: #000000"> (</span><span style="color: #001080">msg</span><span style="color: #000000">.</span><span style="color: #001080">content</span><span style="color: #000000">.</span><span style="color: #795E26">includes</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;+pause&#039;</span><span style="color: #000000">)) { </span>
+<span style="color: #000000">        </span><span style="color: #008000">//paused</span>
 <span style="color: #000000">        </span><span style="color: #001080">player</span><span style="color: #000000">.</span><span style="color: #795E26">pause</span><span style="color: #000000">(); </span>
-<span style="color: #000000">        </span><span style="color: #AF00DB">return</span><span style="color: #000000"> </span><span style="color: #001080">msg</span><span style="color: #000000">.</span><span style="color: #001080">channel</span><span style="color: #000000">.</span><span style="color: #795E26">send</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;paused&#039;</span><span style="color: #000000">)</span>
+
 <span style="color: #000000">    } </span><span style="color: #AF00DB">else</span><span style="color: #000000"> </span><span style="color: #AF00DB">if</span><span style="color: #000000"> (</span><span style="color: #001080">msg</span><span style="color: #000000">.</span><span style="color: #001080">content</span><span style="color: #000000">.</span><span style="color: #795E26">includes</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;+resume&#039;</span><span style="color: #000000">)) {</span>
+<span style="color: #000000">        </span><span style="color: #008000">//resume</span>
 <span style="color: #000000">        </span><span style="color: #001080">player</span><span style="color: #000000">.</span><span style="color: #795E26">resume</span><span style="color: #000000">(); </span>
-<span style="color: #000000">        </span><span style="color: #AF00DB">return</span><span style="color: #000000"> </span><span style="color: #001080">msg</span><span style="color: #000000">.</span><span style="color: #001080">channel</span><span style="color: #000000">.</span><span style="color: #795E26">send</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;resumed&#039;</span><span style="color: #000000">);</span>
+
 <span style="color: #000000">    }</span>
 <span style="color: #000000">});</span>
 <span style="color: #001080">client</span><span style="color: #000000">.</span><span style="color: #795E26">login</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;TOKEN&#039;</span><span style="color: #000000">);</span>

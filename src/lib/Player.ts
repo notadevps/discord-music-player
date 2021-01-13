@@ -169,7 +169,10 @@ export class Player extends EventEmitter {
             return error('agrument expected');
         }
         const q = this.playerQueue.get(message.guild!.id);
-        if (!q) return this.emit('error', 'no player found') 
+        if (!q) return this.emit('error', 'no player found');
+        if (q.message?.channel.id  !== message.channel.id ) { 
+            q.message!.channel.id = message.channel.id;
+        }
         q.tracks.splice(0, q.tracks.length );
     }
 
@@ -187,6 +190,9 @@ export class Player extends EventEmitter {
         }
         const q = this.playerQueue.get(message.guild!.id);
         if (!q) return this.emit('error', 'no player found')
+        if (q.message?.channel.id  !== message.channel.id ) { 
+            q.message!.channel.id = message.channel.id;
+        }
         q.tracks.splice(postion, 1);
     }
 
@@ -204,7 +210,10 @@ export class Player extends EventEmitter {
             return error('argument should be number');
         }
         const q = this.playerQueue.get(message.guild!.id);
-        if (!q) return this.emit('error', 'no player found')  
+        if (!q) return this.emit('error', 'no player found');
+        if (q.message?.channel.id  !== message.channel.id ) { 
+            q.message!.channel.id = message.channel.id;
+        }  
         q.voiceConnection?.dispatcher.setVolumeLogarithmic(q.volume / 200);
         q.volume = volume;
         return q.volume
@@ -219,7 +228,10 @@ export class Player extends EventEmitter {
             return error(' argument expected');
         }
         const q = this.playerQueue.get(message.guild!.id);
-        if (!q) return this.emit('error', 'no player found')
+        if (!q) return this.emit('error', 'no player found');
+        if (q.message?.channel.id  !== message.channel.id ) { 
+            q.message!.channel.id = message.channel.id;
+        }
         q.voiceConnection?.dispatcher.pause(); 
         q.paused = true;
         return q.paused
@@ -235,7 +247,10 @@ export class Player extends EventEmitter {
             return error('argument expected');
         }
         const q = this.playerQueue.get(message.guild!.id);
-        if (!q) return this.emit('error', 'no player found')
+        if (!q) return this.emit('error', 'no player found');
+        if (q.message?.channel.id  !== message.channel.id ) { 
+            q.message!.channel.id = message.channel.id;
+        }
         q.voiceConnection?.dispatcher.resume(); 
         q.paused = false;
         return q.paused
@@ -252,6 +267,9 @@ export class Player extends EventEmitter {
         }
         const q = this.playerQueue.get(message.guild!.id);
         if (!q) return this.emit('error', 'no player found');
+        if (q.message?.channel.id  !== message.channel.id ) { 
+            q.message!.channel.id = message.channel.id;
+        }
         q.voiceConnection?.dispatcher.end();;
         q.voiceConnection?.channel.leave();
         this.playerQueue.delete(message.guild!.id);
@@ -268,7 +286,10 @@ export class Player extends EventEmitter {
             return error('argument expected');
         }
         const q = this.playerQueue.get(message.guild!.id);
-        if (!q) return this.emit('error', 'no player found')
+        if (!q) return this.emit('error', 'no player found');
+        if (q.message?.channel.id  !== message.channel.id ) { 
+            q.message!.channel.id = message.channel.id;
+        }
         return q.tracks[0];
     }
     
@@ -282,6 +303,9 @@ export class Player extends EventEmitter {
         }
         const q = this.playerQueue.get(message.guild!.id); 
         if(!q) return this.emit('error', 'no player found'); 
+        if (q.message?.channel.id  !== message.channel.id ) { 
+            q.message!.channel.id = message.channel.id;
+        }
         q.voiceConnection?.dispatcher.end();
     }
 
@@ -296,6 +320,9 @@ export class Player extends EventEmitter {
         }
         const q = this.playerQueue.get(message.guild!.id); 
         if(!q) return this.emit('error', 'no player found'); 
+        if (q.message?.channel.id  !== message.channel.id ) { 
+            q.message!.channel.id = message.channel.id;
+        }
         if (q.loop == false ) { 
             q.loop = true
             return true;  
