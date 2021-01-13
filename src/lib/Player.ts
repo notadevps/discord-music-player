@@ -55,7 +55,7 @@ export class Player extends EventEmitter {
             });
         } else {
             q.tracks.push(track);
-            this.emit('trackAdded', q, q.message);
+            this.emit('trackAdded', q, q.message, track);
         }
     }
 
@@ -333,6 +333,52 @@ export class Player extends EventEmitter {
     }
 }
 
+/**
+ * Emitted when a track starts
+ *  @event Player#queueCreated
+ * @param {Queue} queue
+ * @param {Discord.Message} message
+ */
 
+/**
+ * Emitted when a track starts
+ * @event Player#queueCreated
+ * @param {Queue} queue
+ * @param {Discord.Message} message
+ */
 
-//EVENTS
+/**
+ * Emitted when a  new track is ended
+ * @event Player#trackAdded
+ * @param {Queue} queue
+ * @param {Discord.Message} message
+ * @param {Track}  track
+ */
+
+/**
+ * Emitted when a track ended
+ * @event Player#trackEnded
+ * @param {Queue} queue
+ * @param {Discord.Message} message
+ */
+
+ /**
+ * Emitted when a queue ended
+ * @event Player#queueEnded
+ * @param {Queue} queue
+ * @param {Discord.Message} message
+ */
+
+/**
+ * Emitted when a error
+ * @event Player#error
+ * @param {string} error
+ */
+
+ /**
+ * Emitted when a queue ended
+ * @event Player#queueEnded
+ * @param {Queue} queue
+ * @param {Discord.Message} message
+ */
+

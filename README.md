@@ -31,7 +31,7 @@ player.on('trackEnded', (q, msg) => {
 })
 
 //trackAdded
-player.on('trackAdded' , (q, msg) => {
+player.on('trackAdded' , (q, msg, track) => {
     return msg.channel.send('track added');
 })
 

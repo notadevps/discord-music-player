@@ -3,7 +3,7 @@ const client = new discord.Client();
 const { Player } = require ('discord-youtube-player');
 const player = new Player(client);
 //events
-player.on('trackAdded', (q, msg) => {
+player.on('trackAdded', (q, msg, track) => {
     return msg.channel.send('Added');
 }); 
 player.on('error', (e) => {
