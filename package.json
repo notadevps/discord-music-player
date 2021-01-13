@@ -1,7 +1,7 @@
 {
   "name": "discord-youtube-player",
-  "version": "1.0.0",
-  "description": "Discord Music Player\r a music player based on discord.js ",
+  "version": "1.0.5",
+  "description": "Discord Youtube Player\r a music player based on discord.js ",
   "main": "index.js",
   "dependencies": {
     "@discordjs/opus": "^0.3.3",
@@ -29,6 +29,15 @@
     "url": "git+https://github.com/notadevps/discord-youtube-player.git"
   },
   "author": "",
+  "keywords": [
+    "discord", 
+    "discord-music-player",
+    "discord-youtube-player", 
+    "music", 
+    "discord-music", 
+    "youtube-music" 
+
+  ],
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/notadevps/discord-youtube-player/issues"

@@ -1,6 +1,6 @@
 const discord = require('discord.js'); 
 const client = new discord.Client();
-const { Player } = require ('discord-youtube-player');
+const { Player } = require ('../dist/index');
 const player = new Player(client);
 //events
 player.on('trackAdded', (q, msg, track) => {
@@ -62,4 +62,4 @@ client.on('message', msg => {
         return msg.channel.send('resumed');
     }
 });
-client.login('TOKEN');
+client.login('NzU3ODkxMjgyNDQ5MjAzMjEw.X2m_Qg.VyezCV2QIAPu2R42yUlFIwz77Gc');
