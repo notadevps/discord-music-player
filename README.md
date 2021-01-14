@@ -1,12 +1,13 @@
 
 Discord Music Player
 a music player based on [discord.js](https://discord.js.org/#/)\
-with typescript support\
+with typescript support
 
 Documentation available [link](https://discord-youtube-player.github.io/)
 
 
 # Quickstart
+do install [ffmpeg](https://www.npmjs.com/package/ffmpeg) , [ffmpeg-static](https://www.npmjs.com/package/ffmpeg-static)  and [opus](https://www.npmjs.com/package/@discordjs/opus)
 
 make a file in an IDE of your choice
 you can start with

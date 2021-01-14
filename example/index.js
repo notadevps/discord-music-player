@@ -1,6 +1,6 @@
 const discord = require('discord.js'); 
 const client = new discord.Client();
-const { Player } = require ('../dist/index');
+const { Player } = require ('');
 const player = new Player(client);
 //events
 player.on('trackAdded', (q, msg, track) => {
