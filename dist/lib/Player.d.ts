@@ -1,7 +1,9 @@
+/// <reference types="node" />
 import discord from 'discord.js';
 import { Queue } from './Queue';
 import { EventEmitter } from 'events';
 import { Track } from './Tracks';
+import { filters, options, Null } from './Utils';
 export declare class Player extends EventEmitter {
     /**
      * client
@@ -14,6 +16,10 @@ export declare class Player extends EventEmitter {
      */
     playerQueue: Map<string, Queue>;
     /**
+     * @type {options}
+     */
+    options: Null<options>;
+    /**
      *
      * @param {discord.Client} client  discord client
      * @example
@@ -21,10 +27,10 @@ export declare class Player extends EventEmitter {
      * const { Player } = require('discord-music-player');
      * const discord = require('discord.js')
      * const client = new discord.Client();
-     * const player = new Player(client);
+     * const player = new Player(client, {  autoSelfDeaf: false });
      * ```
      */
-    constructor(client: discord.Client);
+    constructor(client: discord.Client, options?: options);
     /**
      * @param {discord.Message} message discord message event
      * @param {string} track  a url
@@ -109,4 +115,53 @@ export declare class Player extends EventEmitter {
      * @returns true if loop is enabled else false
      */
     setLoopMode(message: discord.Message): boolean;
+    /**
+     * @param  {discord.Message } msg
+     * @param {string} filter filter to be added in your bot
+     */
+    setFilter(msg: discord.Message, data: {
+        filters: filters;
+    }): void;
 }
+/**
+ * Emitted when a track starts
+ *  @event Player#queueCreated
+ * @param {Queue} queue
+ * @param {Discord.Message} message
+ */
+/**
+ * Emitted when a track starts
+ * @event Player#queueCreated
+ * @param {Queue} queue
+ * @param {Discord.Message} message
+ */
+/**
+ * Emitted when a  new track is ended
+ * @event Player#trackAdded
+ * @param {Queue} queue
+ * @param {Discord.Message} message
+ * @param {Track}  track
+ */
+/**
+ * Emitted when a track ended
+ * @event Player#trackEnded
+ * @param {Queue} queue
+ * @param {Discord.Message} message
+ */
+/**
+* Emitted when a queue ended
+* @event Player#queueEnded
+* @param {Queue} queue
+* @param {Discord.Message} message
+*/
+/**
+ * Emitted when a error
+ * @event Player#error
+ * @param {string} error
+ */
+/**
+* Emitted when a queue ended
+* @event Player#queueEnded
+* @param {Queue} queue
+* @param {Discord.Message} message
+*/

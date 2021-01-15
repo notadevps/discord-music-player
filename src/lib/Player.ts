@@ -5,8 +5,8 @@ import { Queue }  from './Queue';
 import { EventEmitter } from 'events';
 import { Track } from './Tracks';
 import ytr  from 'yt-search';
-import error from './Utils';
-
+import error, { filters, options, Null } from './Utils';
+const defaultOption: options = {};
 export class Player extends EventEmitter { 
     /**
      * client 
@@ -17,7 +17,11 @@ export class Player extends EventEmitter {
      * queue
      * @type {Map<string, Queue>} 
      */ 
-    playerQueue: Map<string, Queue>; 
+    playerQueue: Map<string, Queue>;
+    /**
+     * @type {options}
+     */
+    options: Null<options> = null; 
     /**
      * 
      * @param {discord.Client} client  discord client
@@ -26,13 +30,14 @@ export class Player extends EventEmitter {
      * const { Player } = require('discord-music-player');
      * const discord = require('discord.js')
      * const client = new discord.Client(); 
-     * const player = new Player(client);
+     * const player = new Player(client, {  autoSelfDeaf: false });
      * ```
      */
-    constructor(client: discord.Client ) { 
+    constructor(client: discord.Client, options?: options ) { 
         super();
         this.playerClient = client;
         this.playerQueue = new Map();
+        defaultOption.autoSelfDeaf = options?.autoSelfDeaf == false ||  true;
     }
 
     /**
@@ -50,6 +55,9 @@ export class Player extends EventEmitter {
             this.playerQueue.set(message.guild.id, queue);  
             message.member.voice.channel.join().then(connection => {
                 queue.voiceConnection = connection; 
+                if (defaultOption) {
+                    connection.voice?.setSelfDeaf(defaultOption.autoSelfDeaf!);
+                }
                 this._playTrack(queue);
                 this.emit('queueCreated', queue, message);
             });
@@ -135,8 +143,7 @@ export class Player extends EventEmitter {
         }
         if (queue.tracks.length <= 0 ) { 
             queue.message.member.voice.channel.leave();
-            this.emit('queueEnded', queue, queue.message); 
-            return;
+            return this.emit('queueEnded', queue, queue.message); 
         }
         if (queue.tracks[0].url){
             let stream = ytdl(queue.tracks[0].url, {
@@ -330,6 +337,18 @@ export class Player extends EventEmitter {
             q.loop = false;
             return false;
         }
+    }
+
+    /**
+     * @param  {discord.Message } msg
+     * @param {string} filter filter to be added in your bot 
+     */
+    setFilter(msg: discord.Message, data: {filters: filters}) { 
+        const q = this.playerQueue.get(msg.guild!.id);
+        if (!q)  { 
+            this.emit('error', 'no player found', msg);
+        }
+        // Object.keys(data.filters).map((el: string) => q!.filters[el] = el);
     }
 }
 

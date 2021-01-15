@@ -1,7 +1,8 @@
 
 import discord from 'discord.js';
 import { Track } from './Tracks';
-import { Null } from './Utils'; 
+import { Null, filters} from './Utils';
+
 export class Queue { 
     /**
      * array of tracks
@@ -44,13 +45,21 @@ export class Queue {
      */
     loop: boolean = false
     /**
+     * filters 
+     * @type {filters}
+     */
+    filters: filters = {} ;
+    /**
      * 
      * @param {discord.Message} message 
      * @param {Track} track 
      */
+     
     constructor(message: discord.Message, track: Track) { 
         this.message = message;  
         this.tracks.push(track);
+        
+
     }
     get queue() { 
         return this;

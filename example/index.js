@@ -1,7 +1,7 @@
 const discord = require('discord.js'); 
 const client = new discord.Client();
-const { Player } = require ('');
-const player = new Player(client);
+const { Player } = require ('../dist/index');
+const player = new Player(client, {  autoSelfDeaf: true });
 //events
 player.on('trackAdded', (q, msg, track) => {
     return msg.channel.send('Added');
@@ -62,4 +62,4 @@ client.on('message', msg => {
         return msg.channel.send('resumed');
     }
 });
-client.login('TOKEN');
+client.login('NzU3ODkxMjgyNDQ5MjAzMjEw.X2m_Qg.WhWRr9O7tnL2svg1HkVZ2Vn1MdI');

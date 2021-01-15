@@ -19,6 +19,7 @@ const events_1 = require("events");
 const Tracks_1 = require("./Tracks");
 const yt_search_1 = __importDefault(require("yt-search"));
 const Utils_1 = __importDefault(require("./Utils"));
+const defaultOption = {};
 class Player extends events_1.EventEmitter {
     /**
      *
@@ -28,13 +29,18 @@ class Player extends events_1.EventEmitter {
      * const { Player } = require('discord-music-player');
      * const discord = require('discord.js')
      * const client = new discord.Client();
-     * const player = new Player(client);
+     * const player = new Player(client, {  autoSelfDeaf: false });
      * ```
      */
-    constructor(client) {
+    constructor(client, options) {
         super();
+        /**
+         * @type {options}
+         */
+        this.options = null;
         this.playerClient = client;
         this.playerQueue = new Map();
+        defaultOption.autoSelfDeaf = (options === null || options === void 0 ? void 0 : options.autoSelfDeaf) == false || true;
     }
     /**
      * @param {discord.Message} message discord message event
@@ -52,14 +58,18 @@ class Player extends events_1.EventEmitter {
             const queue = new Queue_1.Queue(message, track);
             this.playerQueue.set(message.guild.id, queue);
             message.member.voice.channel.join().then(connection => {
+                var _a;
                 queue.voiceConnection = connection;
+                if (defaultOption) {
+                    (_a = connection.voice) === null || _a === void 0 ? void 0 : _a.setSelfDeaf(defaultOption.autoSelfDeaf);
+                }
                 this._playTrack(queue);
                 this.emit('queueCreated', queue, message);
             });
         }
         else {
             q.tracks.push(track);
-            this.emit('trackAdded', q, q.message);
+            this.emit('trackAdded', q, q.message, track);
         }
     }
     /**
@@ -140,8 +150,7 @@ class Player extends events_1.EventEmitter {
         }
         if (queue.tracks.length <= 0) {
             queue.message.member.voice.channel.leave();
-            this.emit('queueEnded', queue, queue.message);
-            return;
+            return this.emit('queueEnded', queue, queue.message);
         }
         if (queue.tracks[0].url) {
             let stream = discord_ytdl_core_1.default(queue.tracks[0].url, {
@@ -169,12 +178,16 @@ class Player extends events_1.EventEmitter {
      * @param {discord.Message} message
      */
     clear(message) {
+        var _a;
         if (!message) {
             return Utils_1.default('agrument expected');
         }
         const q = this.playerQueue.get(message.guild.id);
         if (!q)
             return this.emit('error', 'no player found');
+        if (((_a = q.message) === null || _a === void 0 ? void 0 : _a.channel.id) !== message.channel.id) {
+            q.message.channel.id = message.channel.id;
+        }
         q.tracks.splice(0, q.tracks.length);
     }
     /**
@@ -183,6 +196,7 @@ class Player extends events_1.EventEmitter {
      * @param {number} postion index of the song to removed
      */
     remove(message, postion) {
+        var _a;
         if (!message) {
             return Utils_1.default('2 arguments expected');
         }
@@ -192,6 +206,9 @@ class Player extends events_1.EventEmitter {
         const q = this.playerQueue.get(message.guild.id);
         if (!q)
             return this.emit('error', 'no player found');
+        if (((_a = q.message) === null || _a === void 0 ? void 0 : _a.channel.id) !== message.channel.id) {
+            q.message.channel.id = message.channel.id;
+        }
         q.tracks.splice(postion, 1);
     }
     /**
@@ -201,7 +218,7 @@ class Player extends events_1.EventEmitter {
      * @returns previous volume
      */
     setVolume(message, volume) {
-        var _a;
+        var _a, _b;
         if (!message) {
             return Utils_1.default('2 arguments expected');
         }
@@ -211,7 +228,10 @@ class Player extends events_1.EventEmitter {
         const q = this.playerQueue.get(message.guild.id);
         if (!q)
             return this.emit('error', 'no player found');
-        (_a = q.voiceConnection) === null || _a === void 0 ? void 0 : _a.dispatcher.setVolumeLogarithmic(q.volume / 200);
+        if (((_a = q.message) === null || _a === void 0 ? void 0 : _a.channel.id) !== message.channel.id) {
+            q.message.channel.id = message.channel.id;
+        }
+        (_b = q.voiceConnection) === null || _b === void 0 ? void 0 : _b.dispatcher.setVolumeLogarithmic(q.volume / 200);
         q.volume = volume;
         return q.volume;
     }
@@ -220,14 +240,17 @@ class Player extends events_1.EventEmitter {
      * @param {discord.Message} message
      */
     pause(message) {
-        var _a;
+        var _a, _b;
         if (!message) {
             return Utils_1.default(' argument expected');
         }
         const q = this.playerQueue.get(message.guild.id);
         if (!q)
             return this.emit('error', 'no player found');
-        (_a = q.voiceConnection) === null || _a === void 0 ? void 0 : _a.dispatcher.pause();
+        if (((_a = q.message) === null || _a === void 0 ? void 0 : _a.channel.id) !== message.channel.id) {
+            q.message.channel.id = message.channel.id;
+        }
+        (_b = q.voiceConnection) === null || _b === void 0 ? void 0 : _b.dispatcher.pause();
         q.paused = true;
         return q.paused;
     }
@@ -237,14 +260,17 @@ class Player extends events_1.EventEmitter {
      * @return false
      */
     resume(message) {
-        var _a;
+        var _a, _b;
         if (!message) {
             return Utils_1.default('argument expected');
         }
         const q = this.playerQueue.get(message.guild.id);
         if (!q)
             return this.emit('error', 'no player found');
-        (_a = q.voiceConnection) === null || _a === void 0 ? void 0 : _a.dispatcher.resume();
+        if (((_a = q.message) === null || _a === void 0 ? void 0 : _a.channel.id) !== message.channel.id) {
+            q.message.channel.id = message.channel.id;
+        }
+        (_b = q.voiceConnection) === null || _b === void 0 ? void 0 : _b.dispatcher.resume();
         q.paused = false;
         return q.paused;
     }
@@ -254,16 +280,19 @@ class Player extends events_1.EventEmitter {
      * @returns true
      */
     stop(message) {
-        var _a, _b;
+        var _a, _b, _c;
         if (!message) {
             return Utils_1.default(' argument expected');
         }
         const q = this.playerQueue.get(message.guild.id);
         if (!q)
             return this.emit('error', 'no player found');
-        (_a = q.voiceConnection) === null || _a === void 0 ? void 0 : _a.dispatcher.end();
+        if (((_a = q.message) === null || _a === void 0 ? void 0 : _a.channel.id) !== message.channel.id) {
+            q.message.channel.id = message.channel.id;
+        }
+        (_b = q.voiceConnection) === null || _b === void 0 ? void 0 : _b.dispatcher.end();
         ;
-        (_b = q.voiceConnection) === null || _b === void 0 ? void 0 : _b.channel.leave();
+        (_c = q.voiceConnection) === null || _c === void 0 ? void 0 : _c.channel.leave();
         this.playerQueue.delete(message.guild.id);
         return true;
     }
@@ -273,12 +302,16 @@ class Player extends events_1.EventEmitter {
      * @return track
      */
     nowPlaying(message) {
+        var _a;
         if (!message) {
             return Utils_1.default('argument expected');
         }
         const q = this.playerQueue.get(message.guild.id);
         if (!q)
             return this.emit('error', 'no player found');
+        if (((_a = q.message) === null || _a === void 0 ? void 0 : _a.channel.id) !== message.channel.id) {
+            q.message.channel.id = message.channel.id;
+        }
         return q.tracks[0];
     }
     /**
@@ -286,14 +319,17 @@ class Player extends events_1.EventEmitter {
      * @param {discord.Message} message
      */
     skip(message) {
-        var _a;
+        var _a, _b;
         if (!message) {
             return Utils_1.default(' argument expected');
         }
         const q = this.playerQueue.get(message.guild.id);
         if (!q)
             return this.emit('error', 'no player found');
-        (_a = q.voiceConnection) === null || _a === void 0 ? void 0 : _a.dispatcher.end();
+        if (((_a = q.message) === null || _a === void 0 ? void 0 : _a.channel.id) !== message.channel.id) {
+            q.message.channel.id = message.channel.id;
+        }
+        (_b = q.voiceConnection) === null || _b === void 0 ? void 0 : _b.dispatcher.end();
     }
     /**
      * enables loop mode
@@ -301,12 +337,16 @@ class Player extends events_1.EventEmitter {
      * @returns true if loop is enabled else false
      */
     setLoopMode(message) {
+        var _a;
         if (!message) {
             return Utils_1.default(' argument expected');
         }
         const q = this.playerQueue.get(message.guild.id);
         if (!q)
             return this.emit('error', 'no player found');
+        if (((_a = q.message) === null || _a === void 0 ? void 0 : _a.channel.id) !== message.channel.id) {
+            q.message.channel.id = message.channel.id;
+        }
         if (q.loop == false) {
             q.loop = true;
             return true;
@@ -316,6 +356,58 @@ class Player extends events_1.EventEmitter {
             return false;
         }
     }
+    /**
+     * @param  {discord.Message } msg
+     * @param {string} filter filter to be added in your bot
+     */
+    setFilter(msg, data) {
+        const q = this.playerQueue.get(msg.guild.id);
+        if (!q) {
+            this.emit('error', 'no player found', msg);
+        }
+        // Object.keys(data.filters).map((el: string) => q!.filters[el] = el);
+    }
 }
 exports.Player = Player;
-//EVENTS
+/**
+ * Emitted when a track starts
+ *  @event Player#queueCreated
+ * @param {Queue} queue
+ * @param {Discord.Message} message
+ */
+/**
+ * Emitted when a track starts
+ * @event Player#queueCreated
+ * @param {Queue} queue
+ * @param {Discord.Message} message
+ */
+/**
+ * Emitted when a  new track is ended
+ * @event Player#trackAdded
+ * @param {Queue} queue
+ * @param {Discord.Message} message
+ * @param {Track}  track
+ */
+/**
+ * Emitted when a track ended
+ * @event Player#trackEnded
+ * @param {Queue} queue
+ * @param {Discord.Message} message
+ */
+/**
+* Emitted when a queue ended
+* @event Player#queueEnded
+* @param {Queue} queue
+* @param {Discord.Message} message
+*/
+/**
+ * Emitted when a error
+ * @event Player#error
+ * @param {string} error
+ */
+/**
+* Emitted when a queue ended
+* @event Player#queueEnded
+* @param {Queue} queue
+* @param {Discord.Message} message
+*/
