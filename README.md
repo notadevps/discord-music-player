@@ -1,7 +1,7 @@
 
 Discord Music Player
 a music player based on [discord.js](https://discord.js.org/#/)\
-with typescript support
+with typescript support and all types of filters
 
 Documentation available [link](https://discord-youtube-player.github.io/)
 
@@ -15,7 +15,7 @@ you can start with
 const discord = require('discord.js');
 const client = new discord.Client();
 const { Player } = require ('discord-music-player');
-const player = new Player(client);
+const player = new Player(client, { autoSelfDeaf: true });
 ```
 
 # Events 

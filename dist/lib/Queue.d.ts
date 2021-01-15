@@ -1,6 +1,6 @@
 import discord from 'discord.js';
 import { Track } from './Tracks';
-import { Null, filters } from './Utils';
+import { Null } from './Utils';
 export declare class Queue {
     /**
      * array of tracks
@@ -46,7 +46,7 @@ export declare class Queue {
      * filters
      * @type {filters}
      */
-    filters: filters;
+    filters: any;
     /**
      *
      * @param {discord.Message} message

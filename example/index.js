@@ -60,6 +60,8 @@ client.on('message', msg => {
     } else if (msg.content.includes('+resume')) {
         player.resume(); 
         return msg.channel.send('resumed');
+    } else if (msg.content.includes('+filter')) { 
+        player.setFilter(msg, { bassboost: true, nightcore: true, tremolo: true });
     }
 });
 client.login('TOKEN');

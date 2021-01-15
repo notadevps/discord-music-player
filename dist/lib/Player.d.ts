@@ -117,11 +117,9 @@ export declare class Player extends EventEmitter {
     setLoopMode(message: discord.Message): boolean;
     /**
      * @param  {discord.Message } msg
-     * @param {string} filter filter to be added in your bot
+     * @param {filters} data filter to be added in your bot
      */
-    setFilter(msg: discord.Message, data: {
-        filters: filters;
-    }): void;
+    setFilter(msg: discord.Message, data: filters): any;
 }
 /**
  * Emitted when a track starts

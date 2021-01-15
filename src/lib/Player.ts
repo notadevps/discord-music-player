@@ -6,7 +6,53 @@ import { EventEmitter } from 'events';
 import { Track } from './Tracks';
 import ytr  from 'yt-search';
 import error, { filters, options, Null } from './Utils';
+
 const defaultOption: options = {};
+
+/**
+ * @typedef  filter 
+ * @property {boolean} [bassboost=false]
+ * @property {boolean} [8D=false]
+ * @property {boolean} [vaporwave=false]
+ * @property {boolean} [nightcore=false]
+ * @property {boolean} [phaser=false]
+ * @property {boolean} [termolo=false]
+ * @property {boolean} [treble=false]
+ * @property {boolean} [normalizer=false]
+ * @property {boolean} [surrounding=false]
+ * @property {boolean} [pulsator=false]
+ * @property {boolean} [subboost=false]
+ * @property {boolean} [karaoke=false]
+ * @property {boolean} [flanger=false]
+ * @property {boolean} [gate=false]
+ * @property {boolean} [haas=false]
+ * @property {boolean} [mcompand=false]
+ * @property {boolean} [mono=false]
+ */
+
+const filter: any = {
+    bassboost: 'bass=g=20',
+    '8D': 'apulsator=hz=0.09',
+    vaporwave: 'aresample=48000,asetrate=48000*0.8',
+    nightcore: 'aresample=48000,asetrate=48000*1.25',
+    phaser: 'aphaser=in_gain=0.4',
+    tremolo: 'tremolo',
+    vibrato: 'vibrato=f=6.5',
+    reverse: 'areverse',
+    treble: 'treble=g=5',
+    normalizer: 'dynaudnorm=g=101',
+    surrounding: 'surround',
+    pulsator: 'apulsator=hz=1',
+    subboost: 'asubboost',
+    karaoke: 'stereotools=mlev=0.03',
+    flanger: 'flanger',
+    gate: 'agate',
+    haas: 'haas',
+    mcompand: 'mcompand',
+    mono: 'pan=mono|c0=.5*c0+.5*c1'
+}
+
+
 export class Player extends EventEmitter { 
     /**
      * client 
@@ -145,11 +191,24 @@ export class Player extends EventEmitter {
             queue.message.member.voice.channel.leave();
             return this.emit('queueEnded', queue, queue.message); 
         }
+        const encoderArgsFilters: any = []
+        Object.keys(queue?.filters).forEach((name) => {
+            if (queue?.filters[name]) {
+                encoderArgsFilters.push(filter[name])
+            }
+        })
+        let encoderArgs: any;
+        if (encoderArgsFilters.length < 1) {
+            encoderArgs = []
+        } else {
+            encoderArgs = ['-af', encoderArgsFilters.join(',')]
+        }
         if (queue.tracks[0].url){
             let stream = ytdl(queue.tracks[0].url, {
                 filter: 'audioonly', 
                 opusEncoded: true,
-                highWaterMark: 1 << 25
+                highWaterMark: 1 << 25, 
+                encoderArgs,
             }); 
             if (queue.stream) { 
                 queue.stream.destroy();
@@ -341,14 +400,21 @@ export class Player extends EventEmitter {
 
     /**
      * @param  {discord.Message } msg
-     * @param {string} filter filter to be added in your bot 
+     * @param {filters} data filter to be added in your bot 
      */
-    setFilter(msg: discord.Message, data: {filters: filters}) { 
+    setFilter(msg: discord.Message, data: filters ) { 
         const q = this.playerQueue.get(msg.guild!.id);
         if (!q)  { 
             this.emit('error', 'no player found', msg);
         }
-        // Object.keys(data.filters).map((el: string) => q!.filters[el] = el);
+        if (q?.filters)  {
+            Object.keys(data).map(key =>  { 
+                if (filter[key])  { 
+                    q.filters[key] = filter[key];  
+                }
+            });
+        }
+        return q?.filters;
     }
 }
 

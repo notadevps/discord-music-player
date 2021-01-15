@@ -48,7 +48,7 @@ export class Queue {
      * filters 
      * @type {filters}
      */
-    filters: filters = {} ;
+    filters: any = {} ;
     /**
      * 
      * @param {discord.Message} message 
