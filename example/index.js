@@ -62,4 +62,4 @@ client.on('message', msg => {
         return msg.channel.send('resumed');
     }
 });
-client.login('NzU3ODkxMjgyNDQ5MjAzMjEw.X2m_Qg.WhWRr9O7tnL2svg1HkVZ2Vn1MdI');
+client.login('TOKEN');
