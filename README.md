@@ -4,7 +4,7 @@ a music player based on [discord.js](https://discord.js.org/#/)\
 with typescript support and all types of filters
 
 Documentation available [link](https://discord-youtube-player.github.io/)
-
+Npm [link](https://www.npmjs.com/package/discord-youtube-player)
 
 # Quickstart
 do install [ffmpeg](https://www.npmjs.com/package/ffmpeg) , [ffmpeg-static](https://www.npmjs.com/package/ffmpeg-static)  and [opus](https://www.npmjs.com/package/@discordjs/opus)
